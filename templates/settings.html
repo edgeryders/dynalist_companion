@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+{% block title %}Settings{{ super() }}{% endblock title %}
+{% block navs %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/">Edgeryders</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navToggler">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarToggler">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+<li class="nav-item">
+        <a class="nav-link" href="/">Home</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Settings</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+{% endblock navs %}
+
+{% block content %}
+
+<form method="POST" action="" class="">
+<p>Settings</p>
+<label for="apikey">Dynalist Api key</label>
+<input type="text" name="apikey" id="apikey" class="">
+<label for="tag">Your name tag in dynalist</label>
+<input type="text" name="tag" id="tag" class="">
+
+<button class="">Save</button>
+
+</form>
+
+
+{% endblock content %}
+
+{% block footer %}
+<p class="mt-5 mb-3 text-muted text-center">&copy; 2018</p>
+{{ super() }}
+{% endblock footer %}
+

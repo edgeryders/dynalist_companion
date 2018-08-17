@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+{% block title %}Homepage{{ super() }}{% endblock %}
+{% block navs %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/">Edgeryders</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navToggler">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarToggler">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+<li class="nav-item active">
+        <a class="nav-link" href="#">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/settings">Settings</a>
+      </li>
+    </ul>
+    <a href="/logout">Logout</a>
+  </div>
+</nav>
+{% endblock navs %}
+
+{% block content %}
+
+
+<h1>Todo</h1>
+
+{# <div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Task statactics</h5>
+        <p class="card-text">Tasks</p>
+        <ul class="list-group list-group-flush">
+    <li class="list-group-item">Task completed</li>
+    <li class="list-group-item">Tasks new</li>
+    <li class="list-group-item">Important</li>
+  </ul>
+        <a href="#" class="btn btn-primary">Go to task</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card border-danger">
+      <div class="card-body">
+        <h5 class="card-title">Upcomming Deadline</h5>
+        <p class="card-text">Important</p>
+        <ul class="list-group list-group-flush">
+    <li class="list-group-item">Task 1</li>
+    <li class="list-group-item">Tasks 2</li>
+    <li class="list-group-item">Tasks 3</li>
+  </ul>
+        <a href="#" class="btn btn-primary">Go to tasks</a>
+      </div>
+    </div>
+  </div>
+</div>
+#}
+{% endblock content %}
+
+{% block footer %}
+<p class="mt-5 mb-3 text-muted text-center">&copy; 2018</p>
+{{ super() }}
+{% endblock footer %}
