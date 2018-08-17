@@ -7,15 +7,15 @@ Currently supports: Email Notification only
 
 
 # Requirements
-Python 3.5 or higher
+* Python 3.5 or higher
 
-Flask package 1.0 or higher
+* Flask package 1.0 or higher
 
-Dynalist pro or free account with developer api enabled
+* Dynalist pro or free account with developer api enabled
 
-Gmail account with login from unsecure app enabled
+* Gmail account with login from unsecure app enabled
 
-Sqlite3
+* Sqlite3
 
 
 # Installation
