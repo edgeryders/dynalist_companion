@@ -31,7 +31,7 @@ Add sqlite3 database:
 
 *Make sure sqlite3 is installed on your system.*
 
-`sqlite3 users.db`
+`$ sqlite3 users.db`
 
 This command will create the **users.db** file in current working directory.
 
@@ -48,7 +48,7 @@ Congratulations !!!
 
 Fire your development web app for test:
 
-`python app.py`
+`$ python app.py`
 
 Open your browser and goto `http://127.0.0.1:8080`
 
@@ -60,7 +60,7 @@ Open your browser and goto `http://127.0.0.1:8080`
 
 Fireup terminal and type:
 
-`python notify.py`
+`$ python notify.py`
 
 Notification will be pushed in every `0 minutes if there is new tasks or mentions specified by users tag. E.g.: `#anu` or `@anu`
 
