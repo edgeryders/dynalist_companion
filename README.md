@@ -62,5 +62,5 @@ Fireup terminal and type:
 
 `$ python notify.py`
 
-Notification will be pushed in every `0 minutes if there is new tasks or mentions specified by users tag. E.g.: `#anu` or `@anu`
+Notification will be pushed in every 10 minutes if there is new tasks or mentions specified by users tag. E.g.: `#anu` or `@anu`
 
