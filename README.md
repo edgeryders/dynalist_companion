@@ -21,7 +21,7 @@ Currently supports: Email Notification only
 # Installation
 Before installation make sure you have installed **Python Package Manager** aka **pip**
 
-**Install flask:** `pip install flask`
+**Install flask:** `$ pip install flask`
 
 ## Configure
 
