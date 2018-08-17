@@ -38,8 +38,11 @@ This command will create the **users.db** file in current working directory.
 Create table and fill with schema:
 
 `sqlite3`
+
 `.open users.db`
+
 `.read users_schema.sql`
+
 
 Congratulations !!!
 
