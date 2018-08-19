@@ -114,7 +114,13 @@ The development usage above uses a small internal web server. That is not suitab
        
     Here, you have to adapt the `user`, `group` and `python-path` parameters. The latter should point to the directory containing your 
 
-6. Add the following configuration in the Apache2 VirtualHost section of your website:
+6. Create an empty directory (for example `/path/to/your/project/public`) that we can use as a pseudo document 
+root directory. The only purpose is to prevent any danger of exposing software source code or configuration files in case 
+of a misconfiguration of your site. Nothing will be served from your document root directory since the whole site is taken over by the CGI script via `WSGIScriptAlias / …` below.
+
+7. Add the following configuration in the Apache2 VirtualHost section of your website:
+
+       DocumentRoot /path/to/your/project/public
 
        WSGIScriptAlias / /path/to/your/project/dynalist_notify.wsgi
 
