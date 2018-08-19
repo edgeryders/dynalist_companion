@@ -1,7 +1,7 @@
 import urllib.request as request
 import json
 import os
-import datetime
+# import datetime
 from time import sleep
 import re
 import smtplib
@@ -103,7 +103,7 @@ class Notifier():
 				elif res2:
 					email = self.getemail(res1.group(1))
 					if email:
-						self.sendmail('[Dynalist Notification Mentions]', email, f'Hi {res1.group(2)},\nYou have been mentioned in a new task.\n\n{line}\nGood luck. :)')
+						self.sendmail('[Dynalist Notification Mentions]', email, f'Hi {res2.group(1)},\nYou have been mentioned in a new task.\n\n{line}\nGood luck. :)')
 		os.remove('dynalist-a.txt')
 		os.rename('dynalist-b.txt', 'dynalist-a.txt')
 		self.data = None
