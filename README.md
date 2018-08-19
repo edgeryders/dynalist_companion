@@ -1,35 +1,47 @@
 # Dynalist-notify
-Real time Push notification system for Dynalist.
 
-Currently supports: Email Notification only
+## 1. Overview
 
-*Working on web push notification*
+Real-time push notification system for [Dynalist](https://dynalist.io).
+
+Currently supports e-mail notifications only. Working on web push notifications!
+
+Every 10 minutes, the software will determine changes to the Dynalist documents that it can access with the provided API key. If any new list item contains tags corresponding to usernames of accounts in this software (for example `#anu` or `@anu`), the software will notify these users about the new items. This allows to use Dynalist for task assignment by tagging items with usernames according to some internal convention. (See [here](https://edgeryders.eu/t/7618) for our usage conventions.)
 
 
-# Requirements
+## 2. Requirements
+
 * Python 3.5 or higher
-
+* PIP
 * Flask package 1.0 or higher
-
-* Dynalist pro or free account with developer api enabled
-
+* Dynalist (free or Pro account)
+* developer API key for Dynalist
 * Gmail account with login from unsecure app enabled
+* SQLite3
 
-* Sqlite3
+
+## 3. Installation
+
+The instructions assume a Debian / Ubuntu system as that is usual for a server. The software is cross-platform though and runs wherever Python runs.
+
+1. Make sure you have installed the Python Package Manager, aka `pip`. If necessary install it with:
+
+    sudo apt install python3-pip
+    
+2. Install Flask:
+
+    pip install flask
+    
+3. Install SQLite3:
+
+    sudo apt-get install sqlite3 libsqlite3-dev
 
 
-# Installation
-Before installation make sure you have installed **Python Package Manager** aka **pip**
-
-**Install flask:** `$ pip install flask`
-
-## Configure
+## 4. Configuration
 
 Rename **`config-sample.json`** file to **`config.json`** and add credentials details as specified inside.
 
 Add sqlite3 database:
-
-*Make sure sqlite3 is installed on your system.*
 
 `$ sqlite3 users.db`
 
@@ -44,23 +56,17 @@ Create table and fill with schema:
 `$ .read users_schema.sql`
 
 
-Congratulations !!!
-
-Fire your development web app for test:
-
-`$ python app.py`
-
-Open your browser and goto `http://127.0.0.1:8080`
+Congratulations!!!
 
 
+## 5. Usage
 
-# Misc
+Fire up your development web app for testing purposes:
 
-**Note:** For sending notification in real time `notify.py` needs separate process:
+    python app.py
 
-Fireup terminal and type:
+Use it by visiting this URL in your browser: `http://127.0.0.1:8080`
 
-`$ python notify.py`
+For sending notification in real time, `notify.py` needs to run in a separate process. Start it in a terminal by running:
 
-Notification will be pushed in every 10 minutes if there is new tasks or mentions specified by users tag. E.g.: `#anu` or `@anu`
-
+    python notify.py
