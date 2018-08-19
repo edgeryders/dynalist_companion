@@ -26,15 +26,15 @@ The instructions assume a Debian / Ubuntu system as that is usual for a server. 
 
 1. Make sure you have installed the Python Package Manager, aka `pip`. If necessary install it with:
 
-        sudo apt install python3-pip
+       sudo apt install python3-pip
     
 2. Install Flask:
 
-        pip3 install flask
+       pip3 install flask
     
 3. Install SQLite3:
 
-        sudo apt install sqlite3 libsqlite3-dev
+       sudo apt install sqlite3 libsqlite3-dev
 
 
 ## 4. Configuration
@@ -43,25 +43,27 @@ The instructions assume a Debian / Ubuntu system as that is usual for a server. 
 
 2. Create your SQLite3 database as `users.db` file in the current working directory:
 
-        sqlite3 users.db
+       sqlite3 users.db
 
 3. Create the table schema inside your SQLite3 database:
 
-        sqlite3
-        .open users.db
-        .read users_schema.sql
+       sqlite3
+       .open users.db
+       .read users_schema.sql
 
 Congratulations!!!
 
 
 ## 5. Usage
 
-Fire up your development web app for testing purposes:
+Fire up your development web application for testing purposes:
 
     python app.py
 
 Use it by visiting this URL in your browser: `http://127.0.0.1:8080`
 
-For sending notification in real time, `notify.py` needs to run in a separate process. Start it in a terminal by running:
+To send notifications in realtime, `notify.py` needs to run in a separate process. Start it in a terminal by running:
 
     python notify.py
+
+To make the application publicly accessible on the Internet, you need to [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) the localhost URL `http://127.0.0.1:8080` to a publicly accessible URL. This can be done with any webserver, for example Apache2 or NGINX.
