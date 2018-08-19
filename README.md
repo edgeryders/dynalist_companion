@@ -46,7 +46,7 @@ This installation will let you use and develop the software. If you want to inst
 
 2. Fill in your Dynalist API secret token into `conf.json`.
 
-    (You should use the API secret token of a Dynalist account that has access to all relevant documents but none beyond. Means, set up a Dynalist account for your team and don't just use your personal one, because that would give this software, and everyone with access to the server you install it on, access to all your other Dynalist documents as well, including personal ones.)
+    (You should use the API secret token of a Dynalist account that has read-only access to the Dynalist file you want to use with ths software, and none beyond that. Means, set up a Dynalist account for your team. Don't just use your personal one, because that would give this software, and everyone with access to the server you install it on, access to all your other Dynalist documents as well, including personal ones. Also don't give the account used by this software write access to your documents in the Dynalist "Manage Sharing …" settings. It is not necessary and would only create the danger that software bugs could delete that file's content.)
       
 3. Fill in the file ID of the Dynalist file to process for notifictaions into `conf.json`.
 
@@ -99,12 +99,7 @@ The development usage above uses a small internal web server. That is not suitab
 
        application.secret_key = os.urandom(12)
        
-    Notes: We could not just import the module since it does not contain a factory function for automatic creation of the 
-    application. We use a singleton application, so we have to import that directly. For reference, see here
-    [here](http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/#creating-a-wsgi-file) and 
-    [here](https://stackoverflow.com/a/21948893). Also, the secret key assignment is equivalent to 
-    [this line](https://github.com/edgeryders/dynalist-notify/blob/master/app.py#L102); we need to duplicate this here 
-    since the wsgi way of calling up the software bypasses that other procedure.
+    Notes: We could not just import the module since it does not contain a factory function for automatic creation of the application. We use a singleton application, so we have to import that directly. For reference, see here [here](http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/#creating-a-wsgi-file) and [here](https://stackoverflow.com/a/21948893). Also, the secret key assignment is equivalent to [this line](https://github.com/edgeryders/dynalist-notify/blob/master/app.py#L102); we need to duplicate this here since the wsgi way of calling up the software bypasses that other procedure.
        
 5. Add the following to your global Apache2 server configuration:
 
@@ -119,9 +114,7 @@ The development usage above uses a small internal web server. That is not suitab
        
     Here, you have to adapt the `user`, `group` and `python-path` parameters. The latter should point to the directory containing your 
 
-6. Create an empty directory (for example `/path/to/your/project/public`) that we can use as a pseudo document 
-root directory. The only purpose is to prevent any danger of exposing software source code or configuration files in case 
-of a misconfiguration of your site. Nothing will be served from your document root directory since the whole site is taken over by the CGI script via `WSGIScriptAlias / …` below.
+6. Create an empty directory (for example `/path/to/your/project/public`) that we can use as a pseudo document root directory. The only purpose is to prevent any danger of exposing software source code or configuration files in case of a misconfiguration of your site. Nothing will be served from your document root directory since the whole site is taken over by the CGI script via `WSGIScriptAlias / …` below.
 
 7. Add the following configuration in the Apache2 VirtualHost section of your website:
 
