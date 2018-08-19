@@ -71,7 +71,7 @@ The instructions assume a Debian / Ubuntu system – the software is cross-platf
 8. Create your SQLite3 database as `users.db` file in the current working directory, and create the required table schema inside:
 
        sqlite3 users.db
-       .read users_schema.sql
+       .read schema.sql
 
 Congratulations!!!
 
