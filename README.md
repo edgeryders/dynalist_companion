@@ -1,4 +1,4 @@
-# Dynalist-notify
+# Dynalist Notify
 
 ## 1. Overview
 
@@ -14,9 +14,9 @@ Every 10 minutes, the software will determine changes to the Dynalist documents 
 * Python 3.5 or higher
 * PIP
 * Flask package 1.0 or higher
-* Dynalist (free or Pro account)
-* developer API key for Dynalist
-* Gmail account with login from unsecure app enabled
+* Dynalist (free or Pro account) 
+* corresponding Dynalist API secret token (get it on the [Dynalist developer page](https://dynalist.io/developer))
+* GMail account with "Login from unsecure app" enabled
 * SQLite3
 
 
@@ -39,7 +39,17 @@ The instructions assume a Debian / Ubuntu system as that is usual for a server. 
 
 ## 4. Configuration
 
-1. Copy file `conf.sample.json` to `conf.json` and add credential details as specified inside the latter.
+1. Copy file `conf.sample.json` to `conf.json`.
+
+2. Fill in the necessary configuration details into the fields in `conf.json`:
+
+    * your Dynalist API secret token 
+
+        (You should use the API secret token of a Dynalist account that has access to all relevant documents but none beyond. Means, set up a Dynalist account for your team and don't just use your personal one, because that would give this software, and everyone with access to the server you install it on, access to all your other Dynalist documents as well, including personal ones.)
+      
+    * File ID of the Dynalist file for which notifications should be processed. (Right now, only a single file is supported.)
+  
+    * GMail credentials of an e-mail address to use for sending out the notifications
 
 2. Create your SQLite3 database as `users.db` file in the current working directory:
 
