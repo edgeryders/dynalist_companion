@@ -41,24 +41,19 @@ The instructions assume a Debian / Ubuntu system as that is usual for a server. 
 
 1. Copy file `conf.sample.json` to `conf.json`.
 
-2. Fill in the necessary configuration details into the fields in `conf.json`:
+2. Fill in your Dynalist API secret token into `conf.json`.
 
-    * your Dynalist API secret token 
-
-        (You should use the API secret token of a Dynalist account that has access to all relevant documents but none beyond. Means, set up a Dynalist account for your team and don't just use your personal one, because that would give this software, and everyone with access to the server you install it on, access to all your other Dynalist documents as well, including personal ones.)
+    (You should use the API secret token of a Dynalist account that has access to all relevant documents but none beyond. Means, set up a Dynalist account for your team and don't just use your personal one, because that would give this software, and everyone with access to the server you install it on, access to all your other Dynalist documents as well, including personal ones.)
       
-    * File ID of the Dynalist file for which notifications should be processed. (Right now, only a single file is supported.)
-  
-    * GMail credentials of an e-mail address to use for sending out the notifications
+3. Fill in the file ID of the Dynalist file to process for notifictaions into `conf.json`.
 
-2. Create your SQLite3 database as `users.db` file in the current working directory:
+    Right now, only a single file is supported. You can find out the file ID by opening the file in Dynalist and copying out the part of the URL from the browser's address bar that is behind `https://dynalist.io/d/`.
+
+4. Fill in GMail credentials of an e-mail address to use for sending out the notifications into `conf.json`.
+
+5. Create your SQLite3 database as `users.db` file in the current working directory, and create the required table schema inside:
 
        sqlite3 users.db
-
-3. Create the table schema inside your SQLite3 database:
-
-       sqlite3
-       .open users.db
        .read users_schema.sql
 
 Congratulations!!!
