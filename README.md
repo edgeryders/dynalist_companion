@@ -1,5 +1,21 @@
 # Dynalist Notify
 
+## Content
+
+**[1. Overview](#1-overview)**
+
+**[2. Requirements](2-requirements)**
+
+**[3. Installation](3-installation)**
+
+* [3.1. Basic installation](#31-basic-installation)
+* [3.2. Additional steps for production environments (Apache)](#32-additional-steps-for-production-environments-apache)
+
+**[4. Usage](4-usage)**
+
+----
+
+
 ## 1. Overview
 
 Real-time push notification system for [Dynalist](https://dynalist.io).
@@ -22,7 +38,7 @@ Every 10 minutes, the software will determine changes to the Dynalist documents 
 
 ## 3. Installation
 
-### 3.1. Basic Installation
+### 3.1. Basic installation
 
 This installation will let you use and develop the software. If you want to install the software for productive use on a web server, also follow the additional steps in section after this one.
 
