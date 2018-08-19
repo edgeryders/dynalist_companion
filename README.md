@@ -94,12 +94,17 @@ The development usage above uses a small internal web server. That is not suitab
 
 4. Create a file `dynalist_notify.wsgi` in your project directory with the following content:
 
+       import os
        from dynalist_notify.app import app as application
+
+       application.secret_key = os.urandom(12)
        
-    (We can't just import the module since it does not contain a factory function for automatic creation of the 
+    Notes: We could not just import the module since it does not contain a factory function for automatic creation of the 
     application. We use a singleton application, so we have to import that directly. For reference, see here
     [here](http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/#creating-a-wsgi-file) and 
-    [here](https://stackoverflow.com/a/21948893).)
+    [here](https://stackoverflow.com/a/21948893). Also, the secret key assignment is equivalent to 
+    [this line](https://github.com/edgeryders/dynalist-notify/blob/master/app.py#L102); we need to duplicate this here 
+    since the wsgi way of calling up the software bypasses that other procedure.
        
 5. Add the following to your global Apache2 server configuration:
 
@@ -130,7 +135,7 @@ of a misconfiguration of your site. Nothing will be served from your document ro
            Require all granted
        </Directory>
        
-7. Reload the Apache2 configuration:
+8. Reload the Apache2 configuration:
 
        service apache2 reload
        
