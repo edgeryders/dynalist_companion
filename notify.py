@@ -1,7 +1,6 @@
 import urllib.request as request
 import json
 import os
-import datetime
 from time import sleep
 import re
 import smtplib
@@ -18,12 +17,14 @@ class Notifier():
 	process = False
 
 	def __init__(self):
-		try:
-			self.conn = sqlite3.connect('users.db')
-		except:
-			print('error')
+
 		conf = open('conf.json', 'r')
 		self.conf = json.load(conf)
+		try:
+			self.conn = sqlite3.connect(self.conf['system']['database'])
+		except:
+			print('unable to find databse')
+			exit()
 		url = self.conf['dynalist']['url']
 		body = {
 		'token': self.conf['dynalist']['api'],
@@ -55,61 +56,57 @@ class Notifier():
  
 	def save(self):
 		if not os.path.isfile('dynalist-a.txt'):
-			a_file = open('dynalist-a.txt', 'w')
+			a_file = open('dynalist-a.txt', 'w', encoding='utf-8')
 			for lines in self.data['nodes']:
 				if lines['checked'] == False:
 					a_file.write('%s\n' % lines['content'])
 			a_file.close()
-			sleep(600)
-			self.save()
+			exit()
 		else:
-			'''created_time = datetime.datetime.fromtimestamp(os.path.getmtime('dynalist-a.txt'))
-			now_time = datetime.datetime.now() - created_time
-			get_minute = int(now_time.total_seconds() / 60)
-			if get_minute > 1:'''
-			b_file = open('dynalist-b.txt', 'w')
+			b_file = open('dynalist-b.txt', 'w', encoding='utf-8')
 			for lines in self.data['nodes']:
 				if lines['checked'] == False:
 					b_file.write('%s\n' % lines['content'])
 			b_file.close()
 			self.parse()
-			'''else:
-				sleep(10)
-				self.save()'''
 
 	def getemail(self, tag):
 		with self.conn:
 			cur = self.conn.cursor()
-			cur.execute("SELECT email FROM users WHERE tags =?", (tag,))
-			email = cur.fetchone()[0]
+			cur.execute("SELECT email FROM users WHERE tag =?", (tag,))
+			email = cur.fetchone()
 			if email:
-				return email
+				return email[0]
 			else:
 				return False
 
 	def parse(self):
-		file1 = open('dynalist-a.txt', 'r')
-		file2 = open('dynalist-b.txt', 'r')
+		file1 = open('dynalist-a.txt', 'r', encoding='utf-8')
+		file2 = open('dynalist-b.txt', 'r', encoding='utf-8')
 		file1 = file1.readlines()
 		file2 = file2.readlines()
 		diff = [x for x in file1 if x not in file2]
+		assigns = []
+		mentions = []
 		if diff:
 			for line in diff:
-				res1, res2 = re.search('.{5,}\\.\s#([a-z]{3,15})', line), re.search('.{5,}\\.\s@([a-z]{3,15})', line)
-				if res1:
-					email = self.getemail(res1.group(1))
-					if email:
-						self.sendmail('[Dynalist Notification New Task]', email, f'Hi {res1.group(1)},\nYou have been assigned with new task.\n\n{line}\nGood luck.:)')
-				elif res2:
-					email = self.getemail(res1.group(1))
-					if email:
-						self.sendmail('[Dynalist Notification Mentions]', email, f'Hi {res1.group(1)},\nYou have been mentioned in a new task.\n\n{line}\nGood luck. :)')
+				if line.count('@'):
+					mentions += re.findall('\s@([a-z]{3,15})', line)
+				elif line.count('#'):
+					assigns += re.findall('\s#([a-z]{3,15})', line)
+				if mentions:
+					for mention in mentions:
+						email = self.getemail(mention)
+						if email:
+							self.sendmail('[Dynalist Notification Mentions]', email, f'Hi {mention},\nYou have been mentioned in a new task.\n\n{line}\nGood luck.:)')
+				elif assigns:
+					for assign in assigns:
+						email = self.getemail(assign)
+						if email:
+							self.sendmail('[Dynalist Notification New Task]', email, f'Hi {assign},\nYou have been assigned with a new task.\n\n{line}\nGood luck. :)')
 		os.remove('dynalist-a.txt')
 		os.rename('dynalist-b.txt', 'dynalist-a.txt')
-		self.data = None
-		sleep(600)
-		self.__init__()
-
+		exit()
 
 	def sendmail(self, subject, emailto, message):
 		msg = MIMEMultipart()
@@ -127,26 +124,4 @@ class Notifier():
 		server.quit()
 
 
-test__ = Notifier()
-
-
-'''res = f<?xml version="1.0" encoding="utf-8"?>\n
-<opml version="2.0">\n
-  <head>\n
-    <title>{data['title']}</title>\n
-    <flavor>dynalist</flavor>\n
-    <source>https://dynalist.io</source>\n
-    <ownerName></ownerName>\n
-    <ownerEmail></ownerEmail>\n
-  </head>\n
-  <body>\n
-for i in body_data:
-	res += f    <outline text="{i['content']}" _note="{i['note']}">\n
-          \n
- 
-res += </body>\n
-</opml>
-
-save = open('test.txt', 'w')
-save.write(res)
-save.close()'''
+init = Notifier()
