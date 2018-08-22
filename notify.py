@@ -1,6 +1,10 @@
 import urllib.request as request
 import json
 import os
+<<<<<<< HEAD
+=======
+# import datetime
+>>>>>>> a7e73acba20c2c1c872f91f463d335816a428274
 from time import sleep
 import re
 import smtplib
@@ -73,7 +77,11 @@ class Notifier():
 	def getemail(self, tag):
 		with self.conn:
 			cur = self.conn.cursor()
+<<<<<<< HEAD
 			cur.execute("SELECT email FROM users WHERE tag =?", (tag,))
+=======
+			cur.execute("SELECT email FROM users WHERE tags =?", (tag,))
+>>>>>>> a7e73acba20c2c1c872f91f463d335816a428274
 			email = cur.fetchone()
 			if email:
 				return email[0]
@@ -90,6 +98,7 @@ class Notifier():
 		mentions = []
 		if diff:
 			for line in diff:
+<<<<<<< HEAD
 				if line.count('@'):
 					mentions += re.findall('\s@([a-z]{3,15})', line)
 				elif line.count('#'):
@@ -104,6 +113,17 @@ class Notifier():
 						email = self.getemail(assign)
 						if email:
 							self.sendmail('[Dynalist Notification New Task]', email, f'Hi {assign},\nYou have been assigned with a new task.\n\n{line}\nGood luck. :)')
+=======
+				res1, res2 = re.search('.{5,}\\.\s#([a-z]{3,15})', line), re.search('.{5,}\\.\s@([a-z]{3,15})', line)
+				if res1:
+					email = self.getemail(res1.group(1))
+					if email:
+						self.sendmail('[Dynalist Notification New Task]', email, f'Hi {res1.group(1)},\nYou have been assigned with new task.\n\n{line}\nGood luck.:)')
+				elif res2:
+					email = self.getemail(res1.group(1))
+					if email:
+						self.sendmail('[Dynalist Notification Mentions]', email, f'Hi {res2.group(1)},\nYou have been mentioned in a new task.\n\n{line}\nGood luck. :)')
+>>>>>>> a7e73acba20c2c1c872f91f463d335816a428274
 		os.remove('dynalist-a.txt')
 		os.rename('dynalist-b.txt', 'dynalist-a.txt')
 		exit()
@@ -124,4 +144,30 @@ class Notifier():
 		server.quit()
 
 
+<<<<<<< HEAD
 init = Notifier()
+=======
+test__ = Notifier()
+
+
+'''res = f<?xml version="1.0" encoding="utf-8"?>\n
+<opml version="2.0">\n
+  <head>\n
+    <title>{data['title']}</title>\n
+    <flavor>dynalist</flavor>\n
+    <source>https://dynalist.io</source>\n
+    <ownerName></ownerName>\n
+    <ownerEmail></ownerEmail>\n
+  </head>\n
+  <body>\n
+for i in body_data:
+	res += f    <outline text="{i['content']}" _note="{i['note']}">\n
+          \n
+ 
+res += </body>\n
+</opml>
+
+save = open('test.txt', 'w')
+save.write(res)
+save.close()'''
+>>>>>>> a7e73acba20c2c1c872f91f463d335816a428274
