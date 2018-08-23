@@ -12,10 +12,6 @@
 	"password" : ""
 	},
 
-	"system":
-	{
-		"database":"~/path/to/users.db",
-		"sync-interval": "10"
+	"database":"~/path/to/users.db"
 
-	}
 }
