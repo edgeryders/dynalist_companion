@@ -1,7 +1,6 @@
 import urllib.request as request
 import json
 import os
-from time import sleep
 import re
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -21,7 +20,7 @@ class Notifier():
 		conf = open('conf.json', 'r')
 		self.conf = json.load(conf)
 		try:
-			self.conn = sqlite3.connect(self.conf['system']['database'])
+			self.conn = sqlite3.connect(self.conf['database'])
 		except:
 			print('unable to find databse')
 			exit()
