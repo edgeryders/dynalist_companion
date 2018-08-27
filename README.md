@@ -27,7 +27,7 @@ Every 10 minutes, the software will determine changes to the Dynalist documents 
 
 ## 2. Requirements
 
-* Python 3.5 or higher
+* Python 3.6 or higher
 * PIP
 * Flask package 1.0 or higher
 * Dynalist (free or Pro account) 
@@ -44,31 +44,48 @@ This installation will let you use and develop the software. If you want to inst
 
 The instructions assume a Debian / Ubuntu system – the software is cross-platform though and runs wherever Python runs.
 
-1. Make sure you have installed the Python Package Manager, aka `pip`. If necessary install it with:
+1. Make sure you have the right Python version (3.6 or higher):
+
+       python --version
+       python3 --version
+       python3.6 --version
+       
+    The first command that shows its version as 3.6 is the right one to use below (we'll use `python3.6` always and be on the safe side). Maybe you have to install it first. Ubuntu 16.04 LTS for example provides only Python 3.5, which will not work – fix it as follows ([source](https://askubuntu.com/a/865569)):
+    
+       sudo add-apt-repository ppa:deadsnakes/ppa
+       sudo apt-get update
+       sudo apt-get install python3.6
+
+2. Make sure you have installed the Python Package Manager, aka `pip`. If necessary, install it. If you have Python 3.6 installed from your default operating system packages (Ubuntu 16.10 and higher), you can just do:
 
        sudo apt install python3-pip
+       
+    Otherwise, if you followed the above instructions for Ubuntu 16.04, you'd do this:
     
-2. Install Flask:
+       curl https://bootstrap.pypa.io/get-pip.py | sudo python3.6
+    
+3. Install Flask, with one of these alternatives:
 
+       pip3.6 install flask
        pip3 install flask
     
-3. Install SQLite3:
+4. Install SQLite3:
 
        sudo apt install sqlite3 libsqlite3-dev
 
-4. Copy file `conf.sample.json` to `conf.json`.
+5. Copy file `conf.sample.json` to `conf.json`.
 
-5. Fill in your Dynalist API secret token into `conf.json`.
+6. Fill in your Dynalist API secret token into `conf.json`.
 
     (You should use the API secret token of a Dynalist account that has read-only access to the Dynalist file you want to use with ths software, and none beyond that. Means, set up a Dynalist account for your team. Don't just use your personal one, because that would give this software, and everyone with access to the server you install it on, access to all your other Dynalist documents as well, including personal ones. Also don't give the account used by this software write access to your documents in the Dynalist "Manage Sharing …" settings. It is not necessary and would only create the danger that software bugs could delete that file's content.)
       
-6. Fill in the file ID of the Dynalist file to process for notifictaions into `conf.json`.
+7. Fill in the file ID of the Dynalist file to process for notifictaions into `conf.json`.
 
     Right now, only a single file is supported. You can find out the file ID by opening the file in Dynalist and copying out the part of the URL from the browser's address bar that is behind `https://dynalist.io/d/`.
 
-7. Fill in GMail credentials of an e-mail address to use for sending out the notifications into `conf.json`.
+8. Fill in GMail credentials of an e-mail address to use for sending out the notifications into `conf.json`.
 
-8. Create your SQLite3 database as `users.db` file in the current working directory, and create the required table schema inside:
+9. Create your SQLite3 database as `users.db` file in the current working directory, and create the required table schema inside:
 
        sqlite3 users.db
        .read schema.sql
@@ -126,9 +143,9 @@ The development usage above uses a small internal web server. That is not suitab
 
        service apache2 reload
        
-9. Keeping the `notify.py` process running. **TODO**
+9. Set up automatic calls to `notify.py`. 
 
-    For e-mail notifications to work, the `notify.py` has to keep runnin permanently. It will detect changes to the Dynalist file every 10 minutes, and send notifications out as required. You can use monit to keep the command `python3 notify.py` running. Also, it has to start automatically when the server reboots.
+    For e-mail notifications to work, the `notify.py` script has to be called by `cron`, for example every 20 minutes. On each run, it will detect changes to the Dynalist file and send notifications out as required.
        
 Your installation should now be functional.
 
@@ -137,8 +154,8 @@ Your installation should now be functional.
 
 When you finished the basic installation, you can already use the software for testing and development:
 
-* Fire up your development web application for testing purposes: `python app.py`
+* Fire up your development web application for testing purposes: `python3.6 app.py`
 * Use it by visiting this URL in your browser: `http://127.0.0.1:8080`
-* To send notifications in realtime, start `notify.py` in a separate process and keep it running: `python notify.py`
+* To process and send notifications *once*, run: `python3.6 notify.py`
 
-When you also finished the installation steps for the production environment, the application will be publicly accessible on the Internet.
+When you also finished the installation steps for the production environment, the application will be publicly accessible on the Internet and send notifications regularly using `cron`.
