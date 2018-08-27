@@ -1,4 +1,4 @@
-# Dynalist Notify
+# Dynalist Companion
 
 ## Content
 
