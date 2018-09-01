@@ -26,6 +26,16 @@
 
 <h1>Todo</h1>
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="alert">
+              {{ message }}
+            </div>
+            {% endfor %}
+         {% endif %}
+      {% endwith %}
+
 {# <div class="row">
   <div class="col-sm-6">
     <div class="card">
@@ -60,7 +70,6 @@
 {% endblock content %}
 
 {% block footer %}
-<p class="mt-5 mb-3 text-muted text-center">&copy; 2018</p>
 <script src="static/push.js"></script>
 {{ super() }}
 {% endblock footer %}

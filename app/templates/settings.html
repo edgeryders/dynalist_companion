@@ -25,19 +25,14 @@
 <form method="POST" action="" class="">
 <p>Settings</p>
 <label for="apikey">Dynalist Api key</label>
-<input type="text" name="apikey" id="apikey" class="">
+<input type="text" name="apikey" id="apikey" class="form-control">
 <label for="tag">Your name tag in dynalist</label>
-<input type="text" name="tag" id="tag" class="">
+<input type="text" name="tag" id="tag" class="form-control">
 
-<button class="">Save</button>
+<button class="btn ">Save</button>
 
 </form>
 
 
 {% endblock content %}
-
-{% block footer %}
-<p class="mt-5 mb-3 text-muted text-center">&copy; 2018</p>
-{{ super() }}
-{% endblock footer %}
 

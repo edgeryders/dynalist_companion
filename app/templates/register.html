@@ -1,0 +1,91 @@
+{% extends 'layout.html' %}
+  {% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='floating-label.css') }}">
+    {% endblock head %}
+  
+  {% block content %}
+    <form method="POST" class="form-signin" action="">
+      <div class="text-center mb-4">
+      <img class="mb-4" src="https://edgeryders.eu/images/logo-small.png" alt="Logo">
+      <h1 class="h3 mb-3 font-weight-normal">Signup</h1>
+      </div>
+      {% if session['username'] %}
+        <div class="alert alert-danger" role="alert">You're logged in already! <a href="/">Home</a></div>
+       {% else %}
+         {{ form.hidden_tag() }}
+         <div class="form-label-group">
+             {% if form.username.errors %}
+                 {{ form.username(class="form-control is-invalid") }}
+                 <div class="invalid-feedback">
+                 {% for error in form.username.errors %}
+                     <span>{{ error }}</span>
+                     </div>
+
+                 {% endfor %}
+             {% else %}
+                 {{ form.username(class="form-control") }}
+             {% endif %}
+         {{ form.username.label() }}
+           <small id="username" class="form-text text-muted">Username must be same as tag name in dynalist.</small>
+         </div>
+
+          <div class="form-label-group">
+             {% if form.email.errors %}
+                 {{ form.email(class="form-control is-invalid") }}
+                 <div class="invalid-feedback">
+                 {% for error in form.email.errors %}
+                     <span>{{ error }}</span>
+                     </div>
+
+                 {% endfor %}
+             {% else %}
+                 {{ form.email(class="form-control") }}
+             {% endif %}
+         {{ form.email.label() }}
+           <small id="email" class="form-text text-muted">Verification process will be sent to the specified emai address.</small>
+         </div>
+
+
+    <div class="form-label-group">
+      {{ form.password(class="form-control") }}
+      {{ form.password.label() }}
+    </div>
+
+   <div class="form-label-group">
+             {% if form.confirm_password.errors %}
+                 {{ form.confirm_password(class="form-control is-invalid") }}
+                 <div class="invalid-feedback">
+                 {% for error in form.confirm_password.errors %}
+                     <span>{{ error }}</span>
+                     </div>
+
+                 {% endfor %}
+             {% else %}
+                 {{ form.confirm_password(class="form-control") }}
+             {% endif %}
+         {{ form.confirm_password.label() }}
+         </div>
+
+    <div class="form-label-group">
+             {% if form.secret_code.errors %}
+                 {{ form.secret_code(class="form-control is-invalid") }}
+                 <div class="invalid-feedback">
+                 {% for error in form.secret_code.errors %}
+                     <span>{{ error }}</span>
+                     </div>
+
+                 {% endfor %}
+             {% else %}
+                 {{ form.secret_code(class="form-control") }}
+             {% endif %}
+         {{ form.secret_code.label() }}
+        <small id="SecretCode" class="form-text text-muted">Secret code provided by your administrator. If not request.</small>
+         </div>
+
+    {{ form.submit(class="btn btn-lg btn-primary btn-block") }}
+
+    {% endif %}
+    </form>
+    
+  {% endblock content %}

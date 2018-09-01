@@ -1,6 +1,9 @@
-conf.json
+config.py
 dynalist-a.txt
 dynalist-b.txt
 dynalist-full.json
-users.db
+database.db
 test.py
+__pycache__
+venv
+.idea

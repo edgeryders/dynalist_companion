@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+   {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+{% endblock head %}
+  {% block content %}
+  {% block bodywarp %}<body class="text-center">{% endblock bodywarp %}
+    <form class="form-signin" method="POST">
+      <a href="/"><img class="mb-4" src="https://edgeryders.eu/images/logo-small.png" alt="Logo"></a>
+      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+      {% if session['username'] %}
+    <div class="alert alert-danger" role="alert">You're logged in already! <a href="/">Home</a></div>
+  </form>
+    {% else %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="alert">
+              {{ message }}
+            </div>
+            {% endfor %}
+         {% endif %}
+         {% endwith %}
+    {{ form.hidden_tag() }}
+      {{ form.username.label(class="sr-only") }}
+      {{ form.username(class="form-control") }}
+
+      {{ form.password.label(class="sr-only") }}
+      {{ form.password(class="form-control") }}
+          <label>
+          {{ form.remember(checked="checked") }} Remember Login
+          </label>
+
+      {{ form.submit(class="btn btn-lg btn-primary btn-block") }}
+      
+      <div class="for-text"> <a href="/register">Signup</a></div>
+    </form>
+    {% endif %}
+  {% endblock content %}
