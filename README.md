@@ -174,7 +174,9 @@ The development usage above uses a small internal web server. That is not suitab
 
 4. Create a file `dynalist_companion.wsgi` in your project directory with the following content:
 
-       from dynalist_companion import run as application
+       from dynalist_companion.run import app as application
+       
+    Notes: We could not simply import the whole module ("file") `run.py` since it does not contain a factory function for automatic creation of the application. Instead, it imports other stuff and that creates a singleton application in `app/__init__.py` in line `app = Flask(__name__)`. We need to import that object `app`, and it is only a part of the `run` module ("file")! For reference, see here [here](http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/#creating-a-wsgi-file) and [here](https://stackoverflow.com/a/21948893).
        
 5. Add the following to your global Apache2 server configuration. For example on Ubuntu Linux, place it into `/etc/apache2/conf-available/wsgi-local.conf` and enable it with `a2enconf wsgi-local`.
 
