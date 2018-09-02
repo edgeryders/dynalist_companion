@@ -19,6 +19,7 @@ def login():
     if form.validate_on_submit():
             user = Users.query.filter_by(username=form.username.data).first()
             if user and hashlib.sha256(form.password.data.encode()).hexdigest() == user.password:
+                session['username'] = user.username
                 return redirect(url_for('index'))
             else:
                 flash('Invalid credentials', 'danger')
