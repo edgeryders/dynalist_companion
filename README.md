@@ -135,40 +135,39 @@ The development usage above uses a small internal web server. That is not suitab
 
        $ sudo a2dismod python
 
-2. Install the Python 3 version of the wsgi module for Apache.
+2. Install the wsgi module for Apache to serve your Python files.
 
-    Explanations: We could not simply install it from the Ubunu repository (`sudo apt install libapache2-mod-wsgi-py3`) as that might result in a `mod_wsgi` compiled against a different version of Python. For example if it was compiled against Python 3.5 while we use Pythin 3.6, it would look only for Pythin 3.5 libraries and not find our Python 3.6 libraries which we will provide in the virtual environment under `/path/to/project/venv/lib/python3.6/`. So instead we installed it via pip, which made sure it is the version of the Python in our virtual environment. See [here](https://stackoverflow.com/a/44915354) for details.
+    Explanation: We can not simply install the Python 3 version from the Ubunu repository (`sudo apt install libapache2-mod-wsgi-py3`) as that might be compiled against a different version of Python 3. For example if it was compiled against Python 3.5 while we use Pythin 3.6, it would look only for Pythin 3.5 libraries and not find our Python 3.6 libraries which we will provide in the virtual environment under `/path/to/project/venv/lib/python3.6/`. So instead we installed it via pip, which made sure it is the version of the Python in our virtual environment. See [here](https://stackoverflow.com/a/44915354) for details.
 
    1. Install the package that provides `apxs`, which will be used by the `mod_wsgi` Python package to compile the Apache module:
 
           $ sudo apt install apache2-dev
-         
+
    2. Install the Python header files, again needed during the `mod_wsgi` compilation process:
-  
+
           # If you installed Python 3.6 from your distribution's default repository:
           $ sudo apt install python3-dev
-         
+
           # If yoy installed Python 3.6 from a PPA repository, as instructed above for Ubuntu 16.04:
           $ sudo apt install python3.6-dev
-  
-   3. Install `mod_wsgi` via PIP (which will include automatic compilation):
-  
-          pip install mod_wsgi
-         
-   4. Execute the following command and save the `LoadModule` line and the path displayed for `WSGIPythonHome`:
-  
-          mod_wsgi-express module-config
-         
-   5. Create a file `/etc/apache2/mods-available/wsgi.load` and put in the `LoadModule` line you got from the last step.
-  
-   6. Enable your new Apache2 module:
-  
-          $ sudo a2enmod wsgi
-         
-   7. Restart Apache2 to make it load the new module (to test if that works):
-  
-          $ sudo service apache2 restart
 
+   3. Install `mod_wsgi` via PIP (which will include automatic compilation):
+
+          pip install mod_wsgi
+
+   4. Execute the following command and save the `LoadModule` line and the path displayed for `WSGIPythonHome`:
+
+          mod_wsgi-express module-config
+
+   5. Create a file `/etc/apache2/mods-available/wsgi.load` and put in the `LoadModule` line you got from the last step.
+
+   6. Enable your new Apache2 module:
+
+          $ sudo a2enmod wsgi
+
+   7. Restart Apache2 to make it load the new module (to test if that works):
+
+          $ sudo service apache2 restart
 
 3. Create a project directory (for example `/path/to/your/project/`), and inside that a subdirectory `dynalist_companion` that contains the source code. (The latter will be created automatically when you do a `git clone` to obtain the code from Github.)
 
@@ -185,9 +184,9 @@ The development usage above uses a small internal web server. That is not suitab
          WSGIDaemonProcess dynalist_companion user=user1 group=group1 threads=5 python-home=/path/to/project/venv python-path=/path/to/project:/path/to/project/dynalist_companion
        </IfModule>
        
-    Here, you have to adapt the `user`, `group`, `python-home` and `python-path` parameters. Set `pyhton-home` to the path shown to you for `WSGIPythonHome` by the command `mod_wsgi-express module-config`, a few steps above. Set `python-path` to both the project directory and the `dynalist_companion` subdirectory with the source code inside the project directory, separated with a colon. This is because we have files with python code with `import` statements in both directories, expecting Python to find packages in the subdirectories. (In the project directory itself, this refers to the `.wsgi` file saying `from dynalist_companion import …`.)
+    Here, you have to adapt the `user`, `group`, `python-home` and `python-path` parameters. Set `pyhton-home` to the path shown to you for `WSGIPythonHome` by the command `mod_wsgi-express module-config`, a few steps above. In our case, this is the only thing required, and the recommended solution, to set up Apache2 correctly to use our Python virtual environment ([overview and details](https://modwsgi.readthedocs.io/en/develop/user-guides/virtual-environments.html)). This is the only Set `python-path` to both the project directory and the `dynalist_companion` subdirectory with the source code inside the project directory, separated with a colon. This is because we have files with python code with `import` statements in both directories, expecting Python to find packages in the subdirectories. (In the project directory itself, this refers to the `.wsgi` file saying `from dynalist_companion import …`.)
 
-    Explanations: **(1)** The WSGIDaemonProcess can also be put into a VirtualHost section, but a daemon process group with the same name must only be defined once per server (or Apache will not start). So we better put it into the global section. This also avoids issues with server control panels (like ISPConfig) that accept custom configuration for VirtualHost sections but will deploy them identically in *both* the VirtualHost sections for the HTTP and HTTPS versions. **(2)** The `python-path` argument seems to be the only way to include the project's directory into the Python path. The directive `WSGIPythonPath /path/to/project` does not work here ([reason](https://stackoverflow.com/a/12931688)).
+    Explanations: **(1)** The WSGIDaemonProcess can also be put into a VirtualHost section, but a daemon process group with the same name must only be defined once per server (or Apache will not start). So we better put it into the global section. This also avoids issues with server control panels (like ISPConfig) that accept custom configuration for VirtualHost sections but will deploy them identically in *both* the VirtualHost sections for the HTTP and HTTPS versions. **(2)** The `python-path` argument seems to be the only way to include the project's directory into the Python path. The directive `WSGIPythonPath` does not work here ([reason](https://stackoverflow.com/a/12931688)).
 
 6. Create an empty directory (for example `/path/to/your/project/public`) that we can use as a pseudo document root directory. The only purpose is to prevent any danger of exposing software source code or configuration files in case of a misconfiguration of your site. Nothing will be served from your document root directory since the whole site is taken over by the CGI script via `WSGIScriptAlias / …` below.
 
