@@ -35,6 +35,7 @@ Every 10 minutes, the software will determine changes to the Dynalist documents 
 * Python virtual environment
 * Other packages and dependencies managed by `setup.py`
 
+
 ## 3. Installation
 
 ### 3.1. Basic installation
@@ -52,77 +53,73 @@ The instructions assume a Debian / Ubuntu system – the software is cross-platf
     The first command that shows its version as 3.6 is the right one to use below (we'll use `python3.6` always and be on the safe side). Maybe you have to install it first. Ubuntu 16.04 LTS for example provides only Python 3.5, which will not work – fix it as follows ([source](https://askubuntu.com/a/865569)):
     
        $ sudo add-apt-repository ppa:deadsnakes/ppa
-       $ sudo apt-get update
-       $ sudo apt-get install python3.6
+       $ sudo apt update
+       $ sudo apt install python3.6
 
 2. Make sure you have installed the Python Package Manager, aka `pip`. If necessary, install it. If you have Python 3.6 installed from your default operating system packages (Ubuntu 16.10 and higher), you can just do:
 
        $ sudo apt install python3-pip
        
-        # Check if its installed:
-        $ python -m pip --version
+       # Check if PIP is installed now:
+       $ python3.6 -m pip --version
         
-        # Output:
-        pip 18.0 from /home/debendra/.local/lib/python3.6/site-packages/pip (python 3.6)
+       # The output should be like this:
+       pip 18.0 from …/lib/python3.6/site-packages/pip (python 3.6)
        
     Otherwise, if you followed the above instructions for Ubuntu 16.04, you'd do this:
     
        $ curl https://bootstrap.pypa.io/get-pip.py | sudo python3.6
 
-3. Create python virtual environment
+3. Create a Python virtual environment
 
-    It is often useful to have one or more Python environments where you can experiment with different combinations of packages without affecting your main installation.
-    Python supports this through virtual environments. The virtual environment is a copy of an existing version of Python with the option to inherit existing packages.
-    A virtual environment is also useful when you need to work on a shared system and do not have permission to install packages as you will be able to install them in the virtual environment.
+    It is often useful to have one or more Python environments where you can experiment with different combinations of packages without affecting your main installation. Python supports this through virtual environments. The virtual environment is a copy of an existing version of Python with the option to inherit existing packages. (A virtual environment is also useful when you need to work on a shared host system and do not have permission to install packages as you will be able to install them in the virtual environment.)
     
-    Make sure you have pip is installed.
+   1. Change into your project directory. This would be a directory like `/path/to/your/project/`, not the `/path/to/your/project/dynalist_companion/` subdirectory that contains the actual source code. This step is essential, as the Python virtual environment (links to Python executables etc.) will be installed here.
     
-    `CD` in your project directory.
+   2. Install the `virtualenv` package:
     
-     **Install virtual env:**
-    
-    
-     `$ pip install virtualenv`
-    
+          $ pip3.6 install virtualenv
 
-    **Initialize virtual environment.**
+   3. Initialize the virtual environment:
     
-    `$ virtualenv venv`
+          $ virtualenv venv
     
-     **Activate virtual environment**
-    
-    `$ source venv/bin/activate`
-    
-    
-   **Output:**
-    
-    
-    `(venv) debendraoli@debendra:~/projects/dynalist_companion$`
-    
+   4. Activate the virtual environment:
 
-4. Run setup files:
+          $ source venv/bin/activate
 
-    We value your time, So we made setup process so easy, you don't have to run any other commands for setup now.
-    Our setup files does everything in mere seconds.
+      Output should be like:
+
+          $ (venv) user@host:~/projects/dynalist_companion
+
+
+4. Install PIP 10.0.1 inside the virtual environment. 
+
+       pip install pip==10.0.1
+
+    Explanation: While it's ok to have PIP 18.0 (currently the [newest version](https://pip.pypa.io/en/stable/news/)) installed system-wide, that version does not work to install the packages we need due to a bug (similar to [here](https://pyrmin.io/gitlab/pyrmin/pyrmin/commit/b59649bc14972fead9adf96d3b03fc719e864b8b)). So we install the version immediately before that, which is PIP 10.0.1 (they switched to calendar-based versioning after that, which is why the next version is indeed PIP 18). We can't do this step inside the `requirements.txt` mechanism via our `setup.py` step, as that would already produce the error mentioned above. So we had to do it manually.
+
+5. Run the setup script:
+
+    We value your time, so we made the setup process easy :-) You don't have to run any other commands for setup now.
+    Our setup script does everything in mere seconds.
         
-    `python setup.py`
+       $ cd dynalist_companion/
+       $ python3.6 setup.py
     
-    Copy secret code generated by `setup.py` for new registration.
+6. Save the secret code generated by `setup.py` to share it later with those you want to allow registration.
     
     Of course, you can manually change the secret code by changing the value of `SECRET_CODE` in `config.py`.
-   
-    **NOTE: THE `SECRET_KEY` IS DIFFERENT FROM `SECRET_CODE` WHICH IS PRIVATE KEY FOR YOUR APPLICATION AND VITAL, THUS CANNOT BE SHARED IN PUBLIC TO PREVENT SECURITY BREACHES.** 
-    
 
-5. Fill in your Dynalist API secret token into `config.py`.
+7. Fill in your Dynalist API secret token into `config.py`.
 
     (You should use the API secret token of a Dynalist account that has read-only access to the Dynalist file you want to use with ths software, and none beyond that. Means, set up a Dynalist account for your team. Don't just use your personal one, because that would give this software, and everyone with access to the server you install it on, access to all your other Dynalist documents as well, including personal ones. Also don't give the account used by this software write access to your documents in the Dynalist "Manage Sharing …" settings. It is not necessary and would only create the danger that software bugs could delete that file's content.)
       
-6. Fill in the file ID of the Dynalist file to process for notifictaions into `config.py`.
+7. Fill in the file ID of the Dynalist file to process for notifictaions into `config.py`.
 
     Right now, only a single file is supported. You can find out the file ID by opening the file in Dynalist and copying out the part of the URL from the browser's address bar that is behind `https://dynalist.io/d/`.
 
-7. Fill in GMail credentials of an e-mail address to use for sending out the notifications into `config.py`.
+8. Fill in the credentials of an e-mail account to use for sending out the notifications into `config.py`.
 
 
 Congratulations!!!
@@ -132,44 +129,79 @@ Congratulations!!!
 
 The development usage above uses a small internal web server. That is not suitable with respect to load and security in production environments, though. For that, we will need additional steps. This section shows the additional steps when you use the Apache2 web server (under Ubuntu / Debian Linux here).
 
+**The following assumes that all PIP and Python commands are executed in the activated `virtualenv` environment of your project, as set up above.**
+
 1. If you used `mod_python` in Apache2 so far, we have to disable it first. (It cannot be used in parallel with `mod_wsgi` and is rather old, so better migrate your other software to also use `mod_wsgi` – [details](https://stackoverflow.com/a/7882151)).
 
-2. Install the Python 3 version of the wsgi module for Apache:
+       $ sudo a2dismod python
 
-       sudo apt install libapache2-mod-wsgi-py3
-       
-3. Create a project directory, and inside that a subdirectory `dynalist_companion` that contains the source code.
+2. Install the Python 3 version of the wsgi module for Apache.
+
+    Explanations: We could not simply install it from the Ubunu repository (`sudo apt install libapache2-mod-wsgi-py3`) as that might result in a `mod_wsgi` compiled against a different version of Python. For example if it was compiled against Python 3.5 while we use Pythin 3.6, it would look only for Pythin 3.5 libraries and not find our Python 3.6 libraries which we will provide in the virtual environment under `/path/to/project/venv/lib/python3.6/`. So instead we installed it via pip, which made sure it is the version of the Python in our virtual environment. See [here](https://stackoverflow.com/a/44915354) for details.
+
+   1. Install the package that provides `apxs`, which will be used by the `mod_wsgi` Python package to compile the Apache module:
+
+          $ sudo apt install apache2-dev
+         
+   2. Install the Python header files, again needed during the `mod_wsgi` compilation process:
+  
+          # If you installed Python 3.6 from your distribution's default repository:
+          $ sudo apt install python3-dev
+         
+          # If yoy installed Python 3.6 from a PPA repository, as instructed above for Ubuntu 16.04:
+          $ sudo apt install python3.6-dev
+  
+   3. Install `mod_wsgi` via PIP (which will include automatic compilation):
+  
+          pip install mod_wsgi
+         
+   4. Execute the following command and save the `LoadModule` line and the path displayed for `WSGIPythonHome`:
+  
+          mod_wsgi-express module-config
+         
+   5. Create a file `/etc/apache2/mods-available/wsgi.load` and put in the `LoadModule` line you got from the last step.
+  
+   6. Enable your new Apache2 module:
+  
+          $ sudo a2enmod wsgi
+         
+   7. Restart Apache2 to make it load the new module (to test if that works):
+  
+          $ sudo service apache2 restart
+
+
+3. Create a project directory (for example `/path/to/your/project/`), and inside that a subdirectory `dynalist_companion` that contains the source code. (The latter will be created automatically when you do a `git clone` to obtain the code from Github.)
 
 4. Create a file `dynalist_companion.wsgi` in your project directory with the following content:
 
-       import run as application
-       
-    Notes: We could not just import the module since it does not contain a factory function for automatic creation of the application. We use a singleton application, so we have to import that directly. For reference, see here [here](http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/#creating-a-wsgi-file) and [here](https://stackoverflow.com/a/21948893). Also, the secret key assignment is equivalent to [this line](https://github.com/edgeryders/dynalist-notify/blob/master/app.py#L102); we need to duplicate this here since the wsgi way of calling up the software bypasses that other procedure.
+       from dynalist_companion import run as application
        
 5. Add the following to your global Apache2 server configuration. For example on Ubuntu Linux, place it into `/etc/apache2/conf-available/wsgi-local.conf` and enable it with `a2enconf wsgi-local`.
 
        <IfModule mod_wsgi.c>
          # Create server-wide unique process groups for mod_wsgi.
-         WSGIDaemonProcess dynalist-notify user=user1 group=group1 threads=5 python-path=/path/to/project
+         WSGIDaemonProcess dynalist_companion user=user1 group=group1 threads=5 python-home=/path/to/project/venv python-path=/path/to/project:/path/to/project/dynalist_companion
        </IfModule>
        
-    Here, you have to adapt the `user`, `group` and `python-path` parameters. The latter should point to the directory containing your `dynalist_notify` directory.
+    Here, you have to adapt the `user`, `group`, `python-home` and `python-path` parameters. Set `pyhton-home` to the path shown to you for `WSGIPythonHome` by the command `mod_wsgi-express module-config`, a few steps above. Set `python-path` to both the project directory and the `dynalist_companion` subdirectory with the source code inside the project directory, separated with a colon. This is because we have files with python code with `import` statements in both directories, expecting Python to find packages in the subdirectories. (In the project directory itself, this refers to the `.wsgi` file saying `from dynalist_companion import …`.)
 
-    Explanations: **(1)** The WSGIDaemonProcess can also be put into a VirtualHost section, but a daemon process group with the same name must only be defined once per server (or Apache will not start). So we better put it into the global section. This also avoids issues with server control panels (like ISPConfig) that accept custom configuration for VirtualHost sections but will deploy it identically both in the VirtualHost sections for the HTTP and HTTPS versions. **(2)** The `python-path` argument seems to be the only way to include the project's directory into the Python path. The directive `WSGIPythonPath /path/to/project` should be equivalent but has no effect.
+    Explanations: **(1)** The WSGIDaemonProcess can also be put into a VirtualHost section, but a daemon process group with the same name must only be defined once per server (or Apache will not start). So we better put it into the global section. This also avoids issues with server control panels (like ISPConfig) that accept custom configuration for VirtualHost sections but will deploy them identically in *both* the VirtualHost sections for the HTTP and HTTPS versions. **(2)** The `python-path` argument seems to be the only way to include the project's directory into the Python path. The directive `WSGIPythonPath /path/to/project` does not work here ([reason](https://stackoverflow.com/a/12931688)).
 
 6. Create an empty directory (for example `/path/to/your/project/public`) that we can use as a pseudo document root directory. The only purpose is to prevent any danger of exposing software source code or configuration files in case of a misconfiguration of your site. Nothing will be served from your document root directory since the whole site is taken over by the CGI script via `WSGIScriptAlias / …` below.
 
 7. Add the following configuration in the Apache2 VirtualHost section of your website:
 
        DocumentRoot /path/to/your/project/public
+       
+       <IfModule mod_wsgi.c>
+           WSGIScriptAlias / /path/to/your/project/dynalist_companion.wsgi
 
-       WSGIScriptAlias / /path/to/your/project/dynalist_notify.wsgi
-
-       <Directory /var/www/clients/client8/web15/web>
-           WSGIProcessGroup dynalist-notify
-           WSGIApplicationGroup %{GLOBAL}
-           Require all granted
-       </Directory>
+           <Directory /path/to/your/project/public>
+               WSGIProcessGroup dynalist_companion
+               WSGIApplicationGroup %{GLOBAL}
+               Require all granted
+           </Directory>
+       </IfModule>
        
 8. Reload the Apache2 configuration:
 
@@ -186,7 +218,7 @@ Your installation should now be functional.
 
 When you finished the basic installation, you can already use the software for testing and development:
 
-* Fire up your development web application for testing purposes: `python3.6 app.py`
+* Fire up your development web application for testing purposes: `python3.6 run.py`
 * Use it by visiting this URL in your browser: `http://127.0.0.1:8080`
 * To process and send notifications *once*, run: `python3.6 notify.py`
 
