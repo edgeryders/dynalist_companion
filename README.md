@@ -79,19 +79,22 @@ The instructions assume a Debian / Ubuntu system – the software is cross-platf
     
     `CD` in your project directory.
     
-    `# Install virtual env:`
+     **Install virtual env:**
     
     
      `$ pip install virtualenv`
     
 
-    `# Initialize virtual environment.`
+    **Initialize virtual environment.**
     
     `$ virtualenv venv`
+    
+     **Activate virtual environment**
+    
     `$ source venv/bin/activate`
     
     
-    `Output:`
+   **Output:**
     
     
     `(venv) debendraoli@debendra:~/projects/dynalist_companion$`
