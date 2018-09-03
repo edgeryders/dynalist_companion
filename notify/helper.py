@@ -54,14 +54,14 @@ def parse(old, new):
                 for mention in mentions:
                     email = get_email(mention)
                     if email:
-                        sendmail('[Dynalist Notification Mentions]', email,
-                                      f'Hi {mention},\nYou have been mentioned in a new task.\n\n{line}\nGood luck.:)')
+                        sendmail('Dynalist Notifications: New Mention', email,
+                                      f'Hi {mention},\n\nYou have been mentioned in a new task:\n\n"{line}"\nGood luck :)')
             if assigns:
                 for assign in assigns:
                     email = get_email(assign)
                     if email:
-                        sendmail('[Dynalist Notification New Task]', email,
-                                      f'Hi {assign},\nYou have been assigned with a new task.\n\n{line}\nGood luck. :)')
+                        sendmail('Dynalist Notifications: New Task', email,
+                                      f'Hi {assign},\n\nYou have been assigned a new task:\n\n"{line}"\nGood luck :)')
 
 
 def sendmail(subject, emailto, message): # Send email
