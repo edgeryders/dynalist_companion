@@ -13,6 +13,9 @@
 
 **[4. Usage](4-usage)**
 
+* [4.1. For developers](41-for-developers)
+* [4.2. For users](42-for-users)
+
 ----
 
 
@@ -224,6 +227,8 @@ Your installation should now be functional.
 
 ## 4. Usage
 
+### 4.1. For developers
+
 When you finished the basic installation, you can already use the software for testing and development as follows:
 
 1. After each SSH login, you need to enter ("activate") the software's Python virtual environment. This way, all following Python related commands will use the Python, PIP and libraries of that environment. You can do this with an absolute path as follows:
@@ -241,3 +246,8 @@ When you finished the basic installation, you can already use the software for t
        python3.6 /path/to/your/project/dynalist_companion/notify.py
 
 When you also finished the installation steps for the production environment, the application will be publicly accessible on the Internet and send notifications regularly using `cron`. You can still also process notifications manually by following the steps 1 and 4 above.
+
+
+### 4.2. For users
+
+Our documentation for end users, including how to register and use the application, is available in [our Dynalist Manual](https://edgeryders.eu/t/7618) in section "4. Get notifications about new tasks". It is written specifically for our own installation, but you can easily adapt it to your case.
