@@ -208,9 +208,16 @@ The development usage above uses a small internal web server. That is not suitab
 
        service apache2 reload
        
-9. Set up automatic calls to `notify.py`. 
+9. Set up cron for automatic calls to `notify.py`.
 
-    For e-mail notifications to work, the `notify.py` script has to be called by `cron`, for example every 20 minutes. On each run, it will detect changes to the Dynalist file and send notifications out as required.
+    For e-mail notifications to work, the `notify.py` script has to be called by `cron`, for example every 20 minutes. On each run, it will detect new changes to the Dynalist file and send notifications out as required. An example crontab line would be this:
+    
+       */20 * * * * /usr/bin/env bash -c 'sleep $(($RANDOM \% 120))s; source /path/to/your/project/venv/bin/activate && cd /path/to/your/project/dynalist_companion/ && python notify.py'
+       
+    Explanations: **(1)** The `*/20` specifies that the command will run every 20 minutes. **(2)** `cron` uses the `sh` shell by default, which does not have the `source` builtin we need for virtualenv activation. We fix this by starting `bash` instead, as [shown here](https://stackoverflow.com/a/50556692). **(3)** Then we wait for a random number of 0-120 seconds to prevent load spikes on the Dynalist servers at minutes 0, 20 and 40 if more people start using this software. The technique was adapted [from here](https://stackoverflow.com/a/16289693). **(4)** Note the use of `\%` in the `sleep $(($RANDOM \% 120))s` command because unescaped `%` terminate lines (!!) in crontab syntax. **(5)** We have to `cd` into our source directory because the software will save the `dynalist-*.txt` files in the current directory (which otherwise would be the home directory of the user running the cron job).
+    
+    Troubleshooting: Check syslog (`tail /var/log/syslog`) to be sure the cronjob gets executed, and under which user and with which command. If no e-mails arrive, first make sure that the existing `dynalist-a.txt` is writeable by the cron job's user – otherwise the script will fail when trying to overwrite it. Also you could temporarily [log cron output to a file](https://stackoverflow.com/a/3287063) to see error messages.
+
        
 Your installation should now be functional.
 
