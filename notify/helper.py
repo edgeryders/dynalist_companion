@@ -43,7 +43,7 @@ def parse(file1, file2):
     file2 = open(file2, 'r', encoding='utf-8')
     read_file1 = file1.readlines()
     read_file2 = file2.readlines()
-    diff = [line for line in read_file1 if line not in read_file2]
+    diff = [line for line in read_file2 if line not in read_file1]
     if diff:
         assigns = []
         mentions = []
