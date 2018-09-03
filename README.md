@@ -4,17 +4,17 @@
 
 **[1. Overview](#1-overview)**
 
-**[2. Requirements](2-requirements)**
+**[2. Requirements](#2-requirements)**
 
-**[3. Installation](3-installation)**
+**[3. Installation](#3-installation)**
 
 * [3.1. Basic installation](#31-basic-installation)
 * [3.2. Additional steps for production environments (Apache)](#32-additional-steps-for-production-environments-apache)
 
-**[4. Usage](4-usage)**
+**[4. Usage](#4-usage)**
 
-* [4.1. For developers](41-for-developers)
-* [4.2. For users](42-for-users)
+* [4.1. For developers](#41-for-developers)
+* [4.2. For users](#42-for-users)
 
 ----
 
