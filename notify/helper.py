@@ -35,15 +35,13 @@ def get_email(username): #get email address from database using tag we got from 
     return email
 
 
-def parse(file1, file2):
+def parse(old, new):
     '''
     Compare two files dynalist-a.txt (old) and dynalist-b.txt (new) that were previously saved before by save().
     '''
-    file1 = open(file1, 'r', encoding='utf-8')
-    file2 = open(file2, 'r', encoding='utf-8')
-    read_file1 = file1.readlines()
-    read_file2 = file2.readlines()
-    diff = [line for line in read_file2 if line not in read_file1]
+    oldfile = open(old, 'r', encoding='utf-8')
+    newfile = open(new, 'r', encoding='utf-8')
+    diff = [line for line in newfile if line not in oldfile]
     if diff:
         assigns = []
         mentions = []
