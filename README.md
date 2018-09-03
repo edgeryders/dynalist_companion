@@ -217,10 +217,20 @@ Your installation should now be functional.
 
 ## 4. Usage
 
-When you finished the basic installation, you can already use the software for testing and development:
+When you finished the basic installation, you can already use the software for testing and development as follows:
 
-* Fire up your development web application for testing purposes: `python3.6 run.py`
-* Use it by visiting this URL in your browser: `http://127.0.0.1:8080`
-* To process and send notifications *once*, run: `python3.6 notify.py`
+1. After each SSH login, you need to enter ("activate") the software's Python virtual environment. This way, all following Python related commands will use the Python, PIP and libraries of that environment. You can do this with an absolute path as follows:
 
-When you also finished the installation steps for the production environment, the application will be publicly accessible on the Internet and send notifications regularly using `cron`.
+       source /path/to/your/project/venv/bin/activate
+
+2. Start the web application for testing and development purposes as follows, using its integrated webserver:
+
+       python3.6 run.py
+       
+3. Access the web application by visiting this URL in your browser: `http://127.0.0.1:8080` (if you configured it to use a different port in `config.py`, use that of course).
+
+4. Run the notification script to get and process the Dynalist content and send notifications *once* with:
+
+       python3.6 /path/to/your/project/dynalist_companion/notify.py
+
+When you also finished the installation steps for the production environment, the application will be publicly accessible on the Internet and send notifications regularly using `cron`. You can still also process notifications manually by following the steps 1 and 4 above.
