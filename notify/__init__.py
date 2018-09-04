@@ -16,19 +16,18 @@ try:
     resp = request.urlopen(req)
     fetch_stat = resp.read().decode('utf-8')
     process = True
-except:
+except Exception:
     print('Unable to connect to dynalist')
     exit()
 finally:
     if process:
-        load_json = json.loads(fetch_stat)
-        if load_json['_code'] == 'Ok':
-            data = load_json
+        data = json.loads(fetch_stat)
+        if data['_code'] == 'Ok':
             save = helper.save(data)
             if save:
                 helper.parse(save[0], save[1])
         else:
-            print(load_json['_msg'])
+            print(data['_msg'])
             exit()
 
 os.remove('dynalist-a.txt') # remove dynalist-a.txt to replace it with new fresh one after rendering
