@@ -13,14 +13,14 @@ def save(data):
         a_file = open('dynalist-a.txt', 'w', encoding='utf-8')
         for lines in data['nodes']:
             if lines['checked'] == False:
-                a_file.write(f"lines['content']\n")
+                a_file.write(f"{lines['content']}\n")
         a_file.close()
         exit()
     else:
         b_file = open('dynalist-b.txt', 'w', encoding='utf-8')
         for lines in data['nodes']:
             if lines['checked'] == False:
-                b_file.write('%s\n' % lines['content'])
+                b_file.write(f"{lines['content']}\n")
         b_file.close()
         files = ['dynalist-a.txt', 'dynalist-b.txt']
 
