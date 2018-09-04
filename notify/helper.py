@@ -5,15 +5,15 @@ from app.models import Users
 
 def save(data):
 
-    files = []
     '''
     Content fetched from dynalist api will be saved in server
     '''
+    files = []
     if not os.path.isfile('dynalist-a.txt'):
         a_file = open('dynalist-a.txt', 'w', encoding='utf-8')
         for lines in data['nodes']:
             if lines['checked'] == False:
-                a_file.write('%s\n' % lines['content'])
+                a_file.write(f"lines['content']\n")
         a_file.close()
         exit()
     else:
@@ -29,7 +29,7 @@ def save(data):
 
 def get_email(username): #get email address from database using tag we got from dynalist
     email = False
-    req = Users.query.filter_by(username=username).one()
+    req = Users.query.filter_by(username=username).first()
     if req:
         email = req.email
     return email
