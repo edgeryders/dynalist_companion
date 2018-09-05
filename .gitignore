@@ -1,9 +1,7 @@
 config.py
-dynalist-a.txt
-dynalist-b.txt
-dynalist-full.json
 database.db
-test.py
 __pycache__
 venv
 .idea
+old.txt
+new.txt

@@ -15,14 +15,14 @@ def save(data):
         old = open('old.txt', 'w', encoding='utf-8')
         for lines in data['nodes']:
             if lines['checked'] == False:
-                old.write(f"{lines['id']} || {lines['content'].rstrip()}\n")
+                old.write(f"{lines['id']} || {lines['content'].strip()}\n")
         old.close()
         exit()
     else:
         new = open('new.txt', 'w', encoding='utf-8')
         for lines in data['nodes']:
             if lines['checked'] == False:
-                new.write(f"{lines['id']} || {lines['content'].rstrip()}\n")
+                new.write(f"{lines['id']} || {lines['content'].strip()}\n")
         new.close()
         files = ['old.txt', 'new.txt']
 
