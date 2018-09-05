@@ -30,6 +30,6 @@ finally:
             print(data['_msg'])
             exit()
 
-os.remove('dynalist-a.txt') # remove dynalist-a.txt to replace it with new fresh one after rendering
-os.rename('dynalist-b.txt', 'dynalist-a.txt') # rename dynalist-b.txt with dynalist-a.txt for later use
+os.remove('old.txt') # remove old.txt to replace it with new fresh one after rendering
+os.rename('new.txt', 'old.txt') # rename new.txt with old.txt for later use
 exit()

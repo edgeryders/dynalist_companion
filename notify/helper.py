@@ -1,6 +1,8 @@
 import os
 import re
 from app.models import Users
+import json
+from app import config
 
 
 def save(data):
@@ -9,20 +11,20 @@ def save(data):
     Content fetched from dynalist api will be saved in server
     '''
     files = []
-    if not os.path.isfile('dynalist-a.txt'):
-        a_file = open('dynalist-a.txt', 'w', encoding='utf-8')
+    if not os.path.isfile('old.txt'):
+        old = open('old.txt', 'w', encoding='utf-8')
         for lines in data['nodes']:
             if lines['checked'] == False:
-                a_file.write(f"{lines['content']}\n")
-        a_file.close()
+                old.write(f"{lines['id']} || {lines['content']}\n")
+        old.close()
         exit()
     else:
-        b_file = open('dynalist-b.txt', 'w', encoding='utf-8')
+        new = open('new.txt', 'w', encoding='utf-8')
         for lines in data['nodes']:
             if lines['checked'] == False:
-                b_file.write(f"{lines['content']}\n")
-        b_file.close()
-        files = ['dynalist-a.txt', 'dynalist-b.txt']
+                new.write(f"{lines['id']} || {lines['content']}\n")
+        new.close()
+        files = ['old.txt', 'new.txt']
 
     return files
 
@@ -39,30 +41,36 @@ def parse(old, new):
     '''
     Compare two files dynalist-a.txt (old) and dynalist-b.txt (new) that were previously saved before by save().
     '''
-    oldfile = open(old, 'r', encoding='utf-8')
-    newfile = open(new, 'r', encoding='utf-8')
-    diff = [line for line in newfile if line not in oldfile]
+    old_file = open(old, 'r', encoding='utf-8')
+    old_file = old_file.readlines()
+    new_file = open(new, 'r', encoding='utf-8')
+    new_file = new_file.readlines()
+    diff = [line for line in new_file if line not in old_file]
     if diff:
         assigns = []
         mentions = []
         for line in diff:
             if line.count('@'):
-                mentions = re.findall('\s@([a-z]{3,15})', line)
+                mentions += re.findall('\s@([a-z.]{3,15})', line)
             elif line.count('#'):
-                assigns = re.findall('\s#([a-z]{3,15})', line)
+                assigns += re.findall('\s#([a-z.]{3,15})', line)
 
             if mentions:
                 for mention in mentions:
                     email = get_email(mention)
                     if email:
-                        sendmail('Dynalist Notifications: New Mention', email,
-                                      f'Hi {mention},\n\nYou have been mentioned in a new task:\n\n"{line}"\nGood luck :)')
+                       split_content = line.split(' || ')
+                       url = f"https://dynalist.io/d/{config['DYNALIST_FILE_ID']}#z={split_content[0]}"
+                       sendmail('Dynalist Notifications: New Mention', email,
+                                      f'Hi {mention},\n\nYou have been mentioned in a new task:\n\n"{split_content[1]}"\n{url}\nGood luck :)')
             if assigns:
                 for assign in assigns:
                     email = get_email(assign)
                     if email:
+                        split_content = line.split(' || ')
+                        url = f"https://dynalist.io/d/{config['DYNALIST_FILE_ID']}#z={split_content[0]}"
                         sendmail('Dynalist Notifications: New Task', email,
-                                      f'Hi {assign},\n\nYou have been assigned a new task:\n\n"{line}"\nGood luck :)')
+                                      f'Hi {assign},\n\nYou have been assigned a new task:\n\n"{split_content[1]}"\n{url}"\nGood luck :)')
 
 
 def sendmail(subject, emailto, message): # Send email
