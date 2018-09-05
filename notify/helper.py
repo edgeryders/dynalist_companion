@@ -47,9 +47,10 @@ def parse(old, new):
         mentions = []
         for line in diff:
             if line.count('@'):
-                mentions += re.findall('\s@([a-z]{3,15})', line)
+                mentions = re.findall('\s@([a-z]{3,15})', line)
             elif line.count('#'):
-                assigns += re.findall('\s#([a-z]{3,15})', line)
+                assigns = re.findall('\s#([a-z]{3,15})', line)
+
             if mentions:
                 for mention in mentions:
                     email = get_email(mention)
