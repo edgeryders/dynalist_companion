@@ -49,9 +49,9 @@ def parse(old, new):
         mentions = []
         for line in diff:
             if line.count('@'):
-                mentions += re.findall('\s@([a-z.]+)', line)
+                mentions = re.findall('\s@([a-z.]+)', line)
             if line.count('#'):
-                assigns += re.findall('\s#([a-z.]+)', line)
+                assigns = re.findall('\s#([a-z.]+)', line)
 
             if mentions:
                 for mention in mentions:
