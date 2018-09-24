@@ -1,5 +1,4 @@
-import json, os, urllib.request as request
-from app import app
+import os, urllib.request as request
 from . import helper
 from . import logger
 
