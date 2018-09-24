@@ -1,14 +1,14 @@
 from flask import render_template, redirect, url_for, session, flash
-from app import app, db
-from app.models import Users
-from app.forms import RegistrationForm, LoginForm, SettingsForm 
+from . import app, db
+from . models import Users
+from . forms import RegistrationForm, LoginForm, SettingsForm
 import hashlib
 
 
 @app.route('/')
 def index():
     if session.get('username'):
-        return render_template('index.html')
+        return render_template('index.html', title='Home')
     else:
         return redirect(url_for('login'))
 
@@ -42,7 +42,24 @@ def register():
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     form = SettingsForm()
+    user_logged = session.get('username')
+    if user_logged:
+        get_user = Users.query.filter_by(username=user_logged).first()
 
+        if form.validate_on_submit():
+            get_user.email = form.email.data
+            get_user.alert_deadline = form.alert_deadline.data if form.alert_deadline.data else '1'
+            get_user.push_email = '1' if form.push_email.data else '0'
+            get_user.push_web = '1' if form.push_web.data else '0'
+            db.session.commit()
+            flash('Settings updated', 'success')
+        else:
+            form.email.data = get_user.email
+            form.push_email.data = get_user.push_email
+            form.push_web.data = get_user.push_web
+            form.alert_deadline.data = get_user.alert_deadline
+    else:
+        return redirect(url_for('login'))
     return render_template('settings.html', form=form, title='Settings')
 
 

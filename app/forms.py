@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 from wtforms.fields.html5 import EmailField
-from app import models, config
+from . import models, config
+
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=3, max=20, message='error length')],
@@ -11,7 +12,7 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(),
                                                                      EqualTo('password', 'Password do not match.')],
-                                     render_kw={"placeholder":"Confirm Password"})
+                                     render_kw={"placeholder": "Confirm Password"})
     secret_code = StringField('Secret Code', validators=[DataRequired()],
                               render_kw={"placeholder":"Secret Code"})
     submit = SubmitField('Sign Up')
@@ -40,7 +41,9 @@ class LoginForm(FlaskForm):
 
 
 class SettingsForm(FlaskForm):
-    browser_push = BooleanField('Browser Push')
-    email_push = BooleanField('Email Push')
+    push_web = BooleanField('Browser Push')
+    push_email = BooleanField('Email Push')
+    email = EmailField('Email', validators=[DataRequired()])
+    alert_deadline = IntegerField('Deadline Alert')
     submit = SubmitField('Update')
 

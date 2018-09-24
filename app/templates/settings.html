@@ -1,8 +1,7 @@
 {% extends 'layout.html' %}
-{% block title %}Settings{{ super() }}{% endblock title %}
 {% block navs %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/">Edgeryders</a>
+  <a class="navbar-brand" href="/">{{ config['APP_NAME'] }}</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navToggler">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -16,23 +15,44 @@
         <a class="nav-link" href="#">Settings</a>
       </li>
   </ul>
+      <a href="{{ url_for('logout') }}">Logout</a>
   </div>
 </nav>
 {% endblock navs %}
 
 {% block content %}
+<div class="container">
+{% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="alert">
+              {{ message }}
+            </div>
+            {% endfor %}
+         {% endif %}
+         {% endwith %}
+<form method="post" action="">
+<div class="form-group">
+    {{ form.hidden_tag() }}
 
-<form method="POST" action="" class="">
-<p>Settings</p>
-<label for="apikey">Dynalist Api key</label>
-<input type="text" name="apikey" id="apikey" class="form-control">
-<label for="tag">Your name tag in dynalist</label>
-<input type="text" name="tag" id="tag" class="form-control">
+    {{ form.email.label }}
+    {{ form.email(class="form-control") }}
 
-<button class="btn ">Save</button>
+    {{ form.alert_deadline.label }}
+    {{ form.alert_deadline(class="form-control") }}
 
+    <div class="form-check">
+    {{ form.push_email(class="form-check-input") }}
+    {{ form.push_email.label(class="form-check-label") }}
+    </div>
+
+    <div class="form-check">
+    {{ form.push_web(class="form-check-input") }}
+    {{ form.push_web.label(class="form-check-label") }}
+    </div>
+
+    {{ form.submit(class="btn btn-primary") }}
+</div>
 </form>
-
-
+</div>
 {% endblock content %}
-

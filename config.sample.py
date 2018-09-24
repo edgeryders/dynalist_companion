@@ -1,3 +1,4 @@
+APP_NAME = 'Edgeryders'
 DEBUG = False
 PORT = 8080
 SMTP_HOST = 'smtp.gmail.com'

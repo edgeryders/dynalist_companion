@@ -1,8 +1,7 @@
 {% extends 'layout.html' %}
-{% block title %}Homepage{{ super() }}{% endblock %}
 {% block navs %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/">Edgeryders</a>
+  <a class="navbar-brand" href="/">{{ config['APP_NAME'] }}</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navToggler">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -16,7 +15,7 @@
         <a class="nav-link" href="/settings">Settings</a>
       </li>
     </ul>
-    <a href="/logout">Logout</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
   </div>
 </nav>
 {% endblock navs %}
