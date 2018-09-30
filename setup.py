@@ -1,15 +1,11 @@
-import pip
+import subprocess
 import secrets
 
-
-with open('requirements.txt') as f:
-    packages = f.read().splitlines()
-for package in packages:
-    if hasattr(pip, 'main'):
-        pip.main(['install', package])
-    else:
-        from pip._internal import main
-        main(['install', package])
+command = 'python -m pip install -r requirements.txt'
+process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+output, error = process.communicate()
+print(output)
+import tags_import
 
 secrets_key = secrets.token_hex(16)
 secret_code = secrets.token_hex(8)

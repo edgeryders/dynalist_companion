@@ -22,50 +22,35 @@
 
 {% block content %}
 
-
-<h1>Todo</h1>
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-            <div class="alert alert-{{ category }}" role="alert">
-              {{ message }}
-            </div>
-            {% endfor %}
-         {% endif %}
-      {% endwith %}
-
-{# <div class="row">
+<div class="row">
   <div class="col-sm-6">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Task statactics</h5>
-        <p class="card-text">Tasks</p>
+        <h5 class="card-title">Trigger Notifications</h5>
+        <p class="card-text">Notification can be triggered by following:</p>
         <ul class="list-group list-group-flush">
-    <li class="list-group-item">Task completed</li>
-    <li class="list-group-item">Tasks new</li>
-    <li class="list-group-item">Important</li>
+          {% for tag in tags %}
+          <li class="list-group-item"><code>{{ tag['symbol'] }}</code> - {{ tag['name']}}<br><small class="text-muted">{{ tag['example']}}</small></li>
+          {% endfor %}
   </ul>
-        <a href="#" class="btn btn-primary">Go to task</a>
+        <a href="https://edgeryders.eu/t/green-book-dynalist-manual/7618/22" class="btn btn-primary">More Documentation</a>
       </div>
     </div>
   </div>
   <div class="col-sm-6">
     <div class="card border-danger">
       <div class="card-body">
-        <h5 class="card-title">Upcomming Deadline</h5>
-        <p class="card-text">Important</p>
+        <h5 class="card-title">Tasks statistics</h5>
+        <p class="card-text">Overview:</p>
         <ul class="list-group list-group-flush">
-    <li class="list-group-item">Task 1</li>
-    <li class="list-group-item">Tasks 2</li>
-    <li class="list-group-item">Tasks 3</li>
+    <li class="list-group-item">Upcoming Deadline: {{ taskinfo['next'] }}</li>
+    <li class="list-group-item">Last Deadline: {{ taskinfo['last'] }} </li>
   </ul>
-        <a href="#" class="btn btn-primary">Go to tasks</a>
+        <a href="https://dynalist.io/d/{{ config['DYNALIST_FILE_ID'] }}#q=%40{{ session['username'] }}%20-is%3Acompleted" class="btn btn-primary">View todo tasks for {{ session['username'] }}</a>
       </div>
     </div>
   </div>
 </div>
-#}
 {% endblock content %}
 
 {% block footer %}

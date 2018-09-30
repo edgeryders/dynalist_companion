@@ -1,4 +1,6 @@
 from . import db
+import re
+from datetime import datetime
 
 
 class Users(db.Model):
@@ -9,4 +11,20 @@ class Users(db.Model):
     browser_pushid = db.Column(db.Text)
     push_email = db.Column(db.Integer, default='1')
     push_web = db.Column(db.Integer, default='1')
-    alert_deadline = db.Column(db.INTEGER, default='1')
+    alert_deadline = db.Column(db.Integer, default='1')
+
+
+class Tags(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    symbol = db.Column(db.String(1), unique=True)
+    name = db.Column(db.String())
+    example = db.Column(db.Text)
+
+def Deadlines(username):
+    read_file = open('old.txt', 'r').read()
+    dates = re.findall('.*(20[0-9]{2}-\d{2}-\d{2}).*. #[%s]' % username, read_file)
+    dates = [datetime.strptime(date, '%Y-%m-%d') for date in dates]
+    now = datetime.now()
+    last, next = max(date for date in dates if date < now), min(date for date in dates if date > now)
+    return {'last': last, 'next': next}
+    

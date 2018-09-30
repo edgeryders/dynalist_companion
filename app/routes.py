@@ -1,14 +1,17 @@
 from flask import render_template, redirect, url_for, session, flash
 from . import app, db
-from . models import Users
+from . models import Users, Deadlines, Tags
 from . forms import RegistrationForm, LoginForm, SettingsForm
 import hashlib
 
 
 @app.route('/')
 def index():
-    if session.get('username'):
-        return render_template('index.html', title='Home')
+    username = session.get('username')
+    if username:
+        tags = Tags.query.all()
+        taskinfo = Deadlines(username)
+        return render_template('index.html', title='Home', tags = tags, taskinfo = taskinfo)
     else:
         return redirect(url_for('login'))
 

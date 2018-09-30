@@ -1,0 +1,12 @@
+[
+	{
+		"symbol": "#",
+		"name": "Assignment",
+		"example": "Do this task. #user1 #user2"
+	},
+	{
+		"symbol": "@",
+		"name": "Mention",
+		"example": "Take help from @user1 @user2 and @user3. #user4"
+	}
+]
