@@ -231,21 +231,27 @@ Your installation should now be functional.
 
 When you finished the basic installation, you can already use the software for testing and development as follows:
 
-1. After each SSH login, you need to enter ("activate") the software's Python virtual environment. This way, all following Python related commands will use the Python, PIP and libraries of that environment. You can do this with an absolute path as follows:
+**Entering the virtual environment:** After each SSH login, you need to enter ("activate") the software's Python virtual environment. This way, all following Python related commands will use the Python, PIP and libraries of that environment. You can do this with an absolute path as follows:
 
        source /path/to/your/project/venv/bin/activate
 
-2. Start the web application for testing and development purposes as follows, using its integrated webserver:
+**Starting the web application:** Start the web application for testing and development purposes as follows, using its integrated webserver:
 
-       python3.6 run.py
+       python run.py
        
-3. Access the web application by visiting this URL in your browser: `http://127.0.0.1:8080` (if you configured it to use a different port in `config.py`, use that of course).
+This has to be done inside the Python virtual environment (see above). This way, `python` will automatically refer to the right Python version. You can now access the web application by visiting this URL in your browser: `http://127.0.0.1:8080` (if you configured it to use a different port in `config.py`, use that of course).
 
-4. Run the notification script to get and process the Dynalist content and send notifications *once* with:
+**Sending notifications:** Run the notification script to get and process the Dynalist content and send notifications *once* with:
 
-       python3.6 /path/to/your/project/dynalist_companion/notify.py
+       source /path/to/your/project/venv/bin/activate && cd /path/to/your/project/dynalist_companion && python notify.py
+       
+When you also finished the installation steps for the production environment, the application will be publicly accessible on the Internet and send notifications regularly using `cron`. You can still also process and send notifications manually by executing the following command. The difference to the version above is that you execute it as user `username` that your webserver uses to execute the Dynalist Companion software, to not mess up the file access rights of files created by the command.
 
-When you also finished the installation steps for the production environment, the application will be publicly accessible on the Internet and send notifications regularly using `cron`. You can still also process notifications manually by following the steps 1 and 4 above.
+       sudo -H -u username bash -c "source /path/to/your/project/venv/bin/activate && cd /path/to/your/project/dynalist_companion && python notify.py"
+
+**Test-run for sending notifications:** You can *test* before which notifications would be sent, without sending any, by appending the `--dry-run` parameter to `notify.py`. So for example, following the first variant of the command from above:
+
+       source /path/to/your/project/venv/bin/activate && cd /path/to/your/project/dynalist_companion && python notify.py --dry-run
 
 
 ### 4.2. For users
