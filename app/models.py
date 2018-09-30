@@ -25,6 +25,12 @@ def Deadlines(username):
     dates = re.findall('.*(20[0-9]{2}-\d{2}-\d{2}).*. #[%s]' % username, read_file)
     dates = [datetime.strptime(date, '%Y-%m-%d') for date in dates]
     now = datetime.now()
-    last, next = max(date for date in dates if date < now), min(date for date in dates if date > now)
+
+    past_dates = [date for date in dates if date < now]
+    last = max(date for date in dates if date < now) if past_dates else ''
+
+    future_dates = [date for date in dates if date > now]
+    next = min(date for date in dates if date > now) if future_dates else ''
+
     return {'last': last, 'next': next}
     
