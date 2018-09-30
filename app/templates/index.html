@@ -46,7 +46,7 @@
     <li class="list-group-item">Upcoming Deadline: {{ taskinfo['next'] }}</li>
     <li class="list-group-item">Last Deadline: {{ taskinfo['last'] }} </li>
   </ul>
-        <a href="https://dynalist.io/d/{{ config['DYNALIST_FILE_ID'] }}#q=%40{{ session['username'] }}%20-is%3Acompleted" class="btn btn-primary">View todo tasks for {{ session['username'] }}</a>
+        <a href="https://dynalist.io/d/{{ config['DYNALIST_FILE_ID'] }}#q=%23{{ session['username'] }}%20-is%3Acompleted" class="btn btn-primary">View todo tasks for {{ session['username'] }}</a>
       </div>
     </div>
   </div>
