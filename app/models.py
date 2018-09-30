@@ -21,7 +21,7 @@ class Tags(db.Model):
     example = db.Column(db.Text)
 
 def Deadlines(username):
-    read_file = open('old.txt', 'r').read()
+    read_file = open('old.txt', 'r', encoding='utf-8').read()
     dates = re.findall('.*(20[0-9]{2}-\d{2}-\d{2}).*. #[%s]' % username, read_file)
     dates = [datetime.strptime(date, '%Y-%m-%d') for date in dates]
     now = datetime.now()
