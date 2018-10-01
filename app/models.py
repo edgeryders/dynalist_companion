@@ -20,11 +20,16 @@ class Tags(db.Model):
     name = db.Column(db.String())
     example = db.Column(db.Text)
 
-def Deadlines(username):
-    read_file = open('old.txt', 'r').read()
-    dates = re.findall('.*(20[0-9]{2}-\d{2}-\d{2}).*. #[%s]' % username, read_file)
-    dates = [datetime.strptime(date, '%Y-%m-%d') for date in dates]
-    now = datetime.now()
-    last, next = max(date for date in dates if date < now), min(date for date in dates if date > now)
-    return {'last': last, 'next': next}
-    
+
+def deadlines(username):
+    try:
+        read_file = open('old.txt', 'r', encoding='utf-8').read()
+        dates = re.findall('.*(20[0-9]{2}-\d{2}-\d{2}).*. #[%s]' % username, read_file)
+        dates = [datetime.strptime(date, '%Y-%m-%d') for date in dates]
+        now = datetime.now()
+        last_deadline, next_deadline = max(date for date in dates if date < now), min(date for date in dates if date > now)
+        return {'last': last_deadline, 'next': next_deadline}
+    except FileNotFoundError:
+        return {'last': 'None', 'next': 'None'}
+
+
