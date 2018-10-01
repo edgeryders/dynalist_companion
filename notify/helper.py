@@ -15,7 +15,7 @@ def save(data):
         logger.info('Writing old.txt')
         old = open('old.txt', 'w', encoding='utf-8')
         for lines in data['nodes']:
-            if lines['checked']:
+            if not lines['checked']:
                 old.write(f"{lines['id']} || {lines['content'].strip()}\n")
         old.close()
         logger.info('"old.txt" written.')
@@ -25,7 +25,7 @@ def save(data):
         logger.info('Writing new.txt')
         new = open('new.txt', 'w', encoding='utf-8')
         for lines in data['nodes']:
-            if lines['checked']:
+            if not lines['checked']:
                 new.write(f"{lines['id']} || {lines['content'].strip()}\n")
         new.close()
         files = ['old.txt', 'new.txt']
