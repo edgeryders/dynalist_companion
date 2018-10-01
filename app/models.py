@@ -29,5 +29,5 @@ def deadlines(username):
         now = datetime.now()
         last_deadline, next_deadline = max(date for date in dates if date < now), min(date for date in dates if date > now)
         return {'last': str(last_deadline)[:10], 'next': str(next_deadline)[:10]}
-    except FileNotFoundError:
+    except:
         return {'last': 'None', 'next': 'None'}
