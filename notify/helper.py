@@ -2,7 +2,8 @@ import os
 import re
 from app.models import Users
 from . import logger
-from . vars import dry_run, config
+from vars import config, old_file, new_file
+from . cli_args import dry_run
 
 
 def save(data):
@@ -11,9 +12,9 @@ def save(data):
     Content fetched from dynalist api will be saved in server
     '''
     files = []
-    if not os.path.isfile('old.txt'):
+    if not os.path.isfile(old_file):
         logger.info('Writing old.txt')
-        old = open('old.txt', 'w', encoding='utf-8')
+        old = open(old_file, 'w', encoding='utf-8')
         for lines in data['nodes']:
             if not lines['checked']:
                 old.write(f"{lines['id']} || {lines['content'].strip()}\n")
@@ -23,12 +24,12 @@ def save(data):
         exit()
     else:
         logger.info('Writing new.txt')
-        new = open('new.txt', 'w', encoding='utf-8')
+        new = open(new_file, 'w', encoding='utf-8')
         for lines in data['nodes']:
             if not lines['checked']:
                 new.write(f"{lines['id']} || {lines['content'].strip()}\n")
         new.close()
-        files = ['old.txt', 'new.txt']
+        files = [old_file, new_file]
         logger.info('new.txt written.')
     return files
 
@@ -78,7 +79,8 @@ def parse(old, new):  # Compare two files dynalist-a.txt (old) and dynalist-b.tx
                         if not dry_run:
                             sendmail('Dynalist Notifications: New Task', email,
                                       f'Hi {assign},\n\nYou have been assigned a new task:"\n\n{split_content[1]}"\n{url}\nGood luck :)')
-
+    else:
+        logger.info('No changes detected.')
 
 
 def sendmail(subject, emailto, message): # Send email

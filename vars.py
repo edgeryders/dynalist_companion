@@ -1,14 +1,10 @@
-import argparse, json
+import json, os
 from app import app
-parser = argparse.ArgumentParser()
-parser.add_argument('--dry-run', action='store_true', help='Test notification in dry run mode.')
-
-args = parser.parse_args()
-
-dry_run = args.dry_run
 
 config = app.config
 process = None
+old_file = os.path.join(config['PROJECT_PATH'], 'resources', 'old.txt')
+new_file = os.path.join(config['PROJECT_PATH'], 'resources', 'new.txt')
 
 body = {
     'token': config['DYNALIST_API_TOKEN'],

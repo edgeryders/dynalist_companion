@@ -7,3 +7,4 @@ old.txt
 new.txt
 *.pyc
 events.log
+resources/
