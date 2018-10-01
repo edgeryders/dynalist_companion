@@ -33,7 +33,7 @@
           <li class="list-group-item"><code>{{ tag['symbol'] }}</code> - {{ tag['name']}}<br><small class="text-muted">{{ tag['example']}}</small></li>
           {% endfor %}
   </ul>
-        <a href="https://edgeryders.eu/t/green-book-dynalist-manual/7618/22" class="btn btn-primary">More Documentation</a>
+        <a href="https://edgeryders.eu/t/dynalist-manual/7618" class="btn btn-primary">More Documentation</a>
       </div>
     </div>
   </div>
@@ -46,7 +46,7 @@
     <li class="list-group-item">Upcoming Deadline: {{ taskinfo['next'] }}</li>
     <li class="list-group-item">Last Deadline: {{ taskinfo['last'] }} </li>
   </ul>
-        <a href="https://dynalist.io/d/{{ config['DYNALIST_FILE_ID'] }}#q=%40{{ session['username'] }}%20-is%3Acompleted" class="btn btn-primary">View todo tasks for {{ session['username'] }}</a>
+        <a href="https://dynalist.io/d/{{ config['DYNALIST_FILE_ID'] }}#q=%23{{ session['username'] }}%20-is%3Acompleted" class="btn btn-primary">View todo tasks for {{ session['username'] }}</a>
       </div>
     </div>
   </div>

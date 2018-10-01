@@ -20,6 +20,7 @@ class Tags(db.Model):
     name = db.Column(db.String())
     example = db.Column(db.Text)
 
+<<<<<<< HEAD
 
 def deadlines(username):
     try:
@@ -33,3 +34,19 @@ def deadlines(username):
         return {'last': 'None', 'next': 'None'}
 
 
+=======
+def Deadlines(username):
+    read_file = open('old.txt', 'r', encoding='utf-8').read()
+    dates = re.findall('.*(20[0-9]{2}-\d{2}-\d{2}).*. #[%s]' % username, read_file)
+    dates = [datetime.strptime(date, '%Y-%m-%d') for date in dates]
+    now = datetime.now()
+
+    past_dates = [date for date in dates if date < now]
+    last = max(date for date in dates if date < now) if past_dates else ''
+
+    future_dates = [date for date in dates if date > now]
+    next = min(date for date in dates if date > now) if future_dates else ''
+
+    return {'last': last, 'next': next}
+    
+>>>>>>> cedbd35aee0a539178bd9f2bcb9d68d0acdbb05d
