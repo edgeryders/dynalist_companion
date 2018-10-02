@@ -19,7 +19,7 @@ class Users(db.Model):
 def deadlines(username):
     try:
         read_file = open(old_file, 'r', encoding='utf-8').read()
-        dates = re.findall('.*(20[0-9]{2}-\d{2}-\d{2}).*\.\s.*#%s.*' % username, read_file)
+        dates = re.findall('.*(20[0-9]{2}-\d{2}-\d{2}).*\.\s.*#%s' % username, read_file)
         dates = [datetime.strptime(date, '%Y-%m-%d') for date in dates]
         now = datetime.now()
 
