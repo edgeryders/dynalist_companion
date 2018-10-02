@@ -1,8 +1,8 @@
 # config files
 config.py
+
 # generated files for persistence and logging
 resources/
-events.log
 
 # Python runtime files
 venv
