@@ -35,8 +35,31 @@
 <div class="form-group">
     {{ form.hidden_tag() }}
 
+    {{ form.username.label }}
+    {% if form.username.errors %}
+                 {{ form.username(class="form-control is-invalid") }}
+                 <div class="invalid-feedback">
+                 {% for error in form.username.errors %}
+                     <span>{{ error }}</span>
+                     </div>
+
+                 {% endfor %}
+             {% else %}
+                 {{ form.username(class="form-control") }}
+             {% endif %}
+
     {{ form.email.label }}
-    {{ form.email(class="form-control") }}
+    {% if form.email.errors %}
+                 {{ form.email(class="form-control is-invalid") }}
+                 <div class="invalid-feedback">
+                 {% for error in form.email.errors %}
+                     <span>{{ error }}</span>
+                     </div>
+
+                 {% endfor %}
+             {% else %}
+                 {{ form.email(class="form-control") }}
+             {% endif %}
 
     {{ form.alert_deadline.label }}
     {{ form.alert_deadline(class="form-control") }}

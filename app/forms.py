@@ -2,7 +2,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 from wtforms.fields.html5 import EmailField
-from . import models, config
+from . models import Users
+from . import config
 
 
 class RegistrationForm(FlaskForm):
@@ -18,12 +19,12 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
-        user = models.Users.query.filter_by(username=username.data).first()
+        user = Users.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError('Username already taken.')
 
     def validate_email(self, email):
-        email = models.Users.query.filter_by(email=email.data).first()
+        email = Users.query.filter_by(email=email.data).first()
         if email:
             raise ValidationError('Email address already exists.')
 
@@ -34,16 +35,27 @@ class RegistrationForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()], render_kw={"placeholder":"Username", "autofocus": True})
+    username = StringField('Username', validators=[DataRequired()],
+                           render_kw={"placeholder":"Username", "autofocus": True})
     password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder":"Password"})
     remember = BooleanField('Remember Login')
     submit = SubmitField('Login')
 
 
 class SettingsForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
     push_web = BooleanField('Browser Push')
     push_email = BooleanField('Email Push')
     email = EmailField('Email', validators=[DataRequired()])
     alert_deadline = IntegerField('Deadline Alert')
     submit = SubmitField('Update')
 
+    def validate_username(self, username):
+        user = Users.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('Username already exists. Please choose different one.')
+
+    def validate_email(self, email):
+        email = Users.query.filter_by(email=email.data).first()
+        if email:
+            raise ValidationError('Email address already exist. Please choose different one.')
