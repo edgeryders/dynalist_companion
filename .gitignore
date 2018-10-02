@@ -1,6 +1,13 @@
+# config files
 config.py
-__pycache__
-venv
-.idea
-*.pyc
+# generated files for persistence and logging
 resources/
+events.log
+
+# Python runtime files
+venv
+__pycache__
+*.pyc
+
+# Python IDE files
+.idea/
