@@ -68,7 +68,7 @@ def parse(old, new):  # Compare two files dynalist-a.txt (old) and dynalist-b.tx
                         logger.info(f'Sending mail to {mention}, address {email}')
                         if not dry_run:
                             sendmail('Dynalist Notifications: New Mention', email,
-                                     f'Hi {mention},\n\nYou have been mentioned in a new task:\n\n"{split_content[1]}"\n{url}\nGood luck :)')
+                                     f'Hi {mention},\n\nYou have been mentioned in a new task:\n\n"{split_content[1]}"\n{url}\n\nGood luck :)')
             if assigns:
                 for assign in assigns:
                     email = get_email(assign)
@@ -78,7 +78,7 @@ def parse(old, new):  # Compare two files dynalist-a.txt (old) and dynalist-b.tx
                         url = f"https://dynalist.io/d/{config['DYNALIST_FILE_ID']}#z={split_content[0]}"
                         if not dry_run:
                             sendmail('Dynalist Notifications: New Task', email,
-                                      f'Hi {assign},\n\nYou have been assigned a new task:\n\n"{split_content[1]}"\n{url}\nGood luck :)')
+                                      f'Hi {assign},\n\nYou have been assigned a new task:\n\n"{split_content[1]}"\n{url}\n\nGood luck :)')
     else:
         logger.info('No changes detected.')
 
