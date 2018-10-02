@@ -26,11 +26,13 @@
   <div class="col-sm-6">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Trigger Notifications</h5>
-        <p class="card-text">Notification can be triggered by following:</p>
+        <h5 class="card-title">Tags</h5>
+        <p class="card-text">Available Tags:</p>
         <ul class="list-group list-group-flush">
-          {% for tag in tags %}
-          <li class="list-group-item"><code>{{ tag['symbol'] }}</code> - {{ tag['name']}}<br><small class="text-muted">{{ tag['example']}}</small></li>
+          {% for user in users %}
+          <li class="list-group-item"><code>#{{ user['username'] }}</code> / <code>@{{ user['username'] }}</code><br>
+            <small class="text-muted">notification by {% if user['push_web'] %}browser push and {% endif %}
+              {% if user['push_email'] %}email to {{ user['email']}}{% endif %}.</small></li>
           {% endfor %}
   </ul>
         <a href="https://edgeryders.eu/t/dynalist-manual/7618" class="btn btn-primary">More Documentation</a>
