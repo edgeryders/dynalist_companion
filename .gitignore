@@ -1,10 +1,12 @@
+# config files
 config.py
-database.db
-__pycache__
-venv
 .idea
-old.txt
-new.txt
-*.pyc
-events.log
+
+# generated files for persistence and logging
 resources/
+events.log
+
+# Python runtime files
+venv
+__pycache__
+*.pyc
