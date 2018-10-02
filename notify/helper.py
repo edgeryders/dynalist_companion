@@ -1,17 +1,25 @@
 import os
 import re
 from app.models import Users
-from . import logger
 from vars import config, old_file, new_file
 from . cli_args import dry_run
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(levelname)s: %(name)s: %(message)s - %(asctime)s')
+
+file_handler = logging.FileHandler(os.path.join(config['RESOURCES_PATH'], 'notify.log'))
+file_handler.setFormatter(formatter)
+
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
 
 
-def save(data):
-
-    '''
-    Content fetched from dynalist api will be saved in server
-    '''
-    files = []
+def save(data): # Content fetched from dynalist api will be saved in server
     if not os.path.isfile(old_file):
         logger.info('Writing old.txt')
         old = open(old_file, 'w', encoding='utf-8')
@@ -23,15 +31,16 @@ def save(data):
         logger.info('Exiting...')
         exit()
     else:
+        logger.info('Old file exists.')
         logger.info('Writing new.txt')
         new = open(new_file, 'w', encoding='utf-8')
         for lines in data['nodes']:
             if not lines['checked']:
                 new.write(f"{lines['id']} || {lines['content'].strip()}\n")
         new.close()
-        files = [old_file, new_file]
         logger.info('new.txt written.')
-    return files
+        logger.info('Parsing...')
+        parse(old_file, new_file)
 
 
 def get_email(username):  # get email address from database using tag we got from dynalist

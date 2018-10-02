@@ -1,10 +1,22 @@
 import urllib.request as request
-from . import helper
-from . import logger
-
+import logging
+from . helper import save
 from vars import *
+from app import config
 
-old_file = old_file
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(levelname)s: %(name)s: %(message)s - %(asctime)s')
+
+file_handler = logging.FileHandler(os.path.join(config['RESOURCES_PATH'], 'notify.log'))
+file_handler.setFormatter(formatter)
+
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
+
 
 try:
     logger.info('Getting data from Dynalist server.')
@@ -23,11 +35,7 @@ finally:
         if data['_code'] == 'Ok':
             logger.info('Data fetched from Dynalist server.')
             logger.info('Saving data...')
-            files = helper.save(data)
-            if files:
-                logger.info('All data saved')
-                logger.info('Parsing data...')
-                helper.parse(files[0], files[1])
+            files = save(data)
         else:
             logger.critical(data['_msg'])
             logger.warning('Exiting...')
@@ -41,4 +49,6 @@ os.rename(new_file, old_file)  # rename new.txt with old.txt for later use
 logger.info('Renamed.')
 logger.info('Cycle completed.')
 logger.info('Exiting...')
+with open(os.path.join(config['RESOURCES_PATH'], 'notify.log'), 'a') as f:
+    f.write('\n\n')
 exit()
