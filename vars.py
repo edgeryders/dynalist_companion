@@ -1,10 +1,10 @@
-import json, os
-from app import app
+import json
+import os
+from app import config
 
-config = app.config
-process = None
 old_file = os.path.join(config['PROJECT_PATH'], 'resources', 'old.txt')
 new_file = os.path.join(config['PROJECT_PATH'], 'resources', 'new.txt')
+
 
 body = {
     'token': config['DYNALIST_API_TOKEN'],

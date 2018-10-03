@@ -2,7 +2,6 @@ import urllib.request as request
 import logging
 from . helper import save
 from vars import *
-from app import config
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
