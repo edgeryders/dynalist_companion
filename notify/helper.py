@@ -1,5 +1,7 @@
 import os
 import re
+from json import dumps
+from datetime import date
 from app.models import Users
 from vars import config, old_file, new_file
 from . cli_args import dry_run
@@ -20,6 +22,12 @@ logger.addHandler(stream_handler)
 
 
 def save(data): # Content fetched from dynalist api will be saved in server
+    logger.info('Writing backup file.')
+    filename = f'Dynalist.EdgerydersTasks.{date.today()}.json'
+    with open(os.path.join(config['RESOURCES_PATH'], filename), 'w') as f:
+        f.write(dumps(data))
+        logger.info('Backup file written.')
+
     if not os.path.isfile(old_file):
         logger.info('Writing old.txt')
         old = open(old_file, 'w', encoding='utf-8')
