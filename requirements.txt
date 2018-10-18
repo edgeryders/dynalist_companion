@@ -1,5 +1,6 @@
 Flask
 Flask-SQLAlchemy
 Flask-WTF
+Flask-Login
 google-api-python-client
 oauth2client
