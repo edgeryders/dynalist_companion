@@ -15,7 +15,9 @@
         <a class="nav-link" href="/settings">Settings</a>
       </li>
     </ul>
+      {% if current_user.is_authenticated %}
     <a href="{{ url_for('logout') }}">Logout</a>
+      {% endif %}
   </div>
 </nav>
 {% endblock navs %}

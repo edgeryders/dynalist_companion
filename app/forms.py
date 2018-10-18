@@ -4,6 +4,7 @@ from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 from wtforms.fields.html5 import EmailField
 from . models import Users
 from . import config
+from flask_login import current_user
 
 
 class RegistrationForm(FlaskForm):
@@ -51,11 +52,13 @@ class SettingsForm(FlaskForm):
     submit = SubmitField('Update')
 
     def validate_username(self, username):
-        user = Users.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError('Username already exists. Please choose different one.')
+        if username.data != current_user.username:
+            user = Users.query.filter_by(username=username.data).first()
+            if user:
+                raise ValidationError('Username already exists. Please choose different one.')
 
     def validate_email(self, email):
-        email = Users.query.filter_by(email=email.data).first()
-        if email:
-            raise ValidationError('Email address already exist. Please choose different one.')
+        if email.data != current_user.email:
+            user = Users.query.filter_by(username=email.data).first()
+            if user:
+                raise ValidationError('Email address already exists. Please choose different one.')
