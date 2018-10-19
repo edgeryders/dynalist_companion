@@ -11,14 +11,12 @@
 <li class="nav-item">
         <a class="nav-link" href="/">Home</a>
       </li>
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="#">Settings</a>
       </li>
-      {% if current_user.admin %}
-           <li class="nav-item">
-               <a class="nav-link" href="{{ url_for('admin') }}">Admin Panel</a>
-           </li>
-      {% endif %}
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Admin Panel</a>
+      </li>
   </ul>
       <a href="{{ url_for('logout') }}">Logout</a>
   </div>

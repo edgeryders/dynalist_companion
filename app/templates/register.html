@@ -3,7 +3,7 @@
     {{ super() }}
     <link rel="stylesheet" href="{{ url_for('static', filename='floating-label.css') }}">
     {% endblock head %}
-  
+
   {% block content %}
 
     <form method="POST" class="form-signin" action="">
@@ -11,10 +11,7 @@
       <img class="mb-4" src="https://edgeryders.eu/images/logo-small.png" alt="Logo">
       <h1 class="h3 mb-3 font-weight-normal">Signup</h1>
       </div>
-      {% if session['username'] %}
-        <div class="alert alert-danger" role="alert">You're logged in already! <a href="/">Home</a></div>
-       {% else %}
-         {{ form.hidden_tag() }}
+      {{ form.hidden_tag() }}
          <div class="form-label-group">
              {% if form.username.errors %}
                  {{ form.username(class="form-control is-invalid") }}
@@ -85,9 +82,7 @@
          </div>
 
     {{ form.submit(class="btn btn-lg btn-primary btn-block") }}
-
-    {% endif %}
+    <small class="text-muted"> <a href="{{ url_for('login') }}">Login</a></small>
     </form>
-      <div class="for-text"> <a href="{{ url_for('register') }}">Signup</a></div>
     
   {% endblock content %}

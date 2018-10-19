@@ -19,6 +19,7 @@ class Users(db.Model, UserMixin):
     push_email = db.Column(db.Integer, default='1')
     push_web = db.Column(db.Integer, default='1')
     alert_deadline = db.Column(db.Integer, default='1')
+    is_admin = db.Column(db.SmallInteger, default='0')
 
 
 def deadlines(username):
@@ -39,3 +40,14 @@ def deadlines(username):
     except FileNotFoundError:
 
         return {'last': 'None', 'next': 'None'}
+
+
+class AppSettings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    app_name = db.Column(db.String(), default='Dynalist Companion')
+    backup_enabled = db.Column(db.SmallInteger, default='0')
+    backup_type = db.Column(db.SmallInteger, default='1')  # 1 = drive, 2 = google drive
+    google_drive_id = db.Column(db.String(), nullable=True)
+    backup_interval = db.Column(db.Integer, default='24')  # interval in hours
+    email_push_enabled = db.Column(db.SmallInteger, default='1')  # 1 = enabled, 0 = disabled
+    web_push_enabled = db.Column(db.SmallInteger, default='1')  # 1 = enabled, 0 = disabled

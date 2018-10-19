@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 from wtforms.fields.html5 import EmailField
 from . models import Users
@@ -62,3 +62,15 @@ class SettingsForm(FlaskForm):
             user = Users.query.filter_by(username=email.data).first()
             if user:
                 raise ValidationError('Email address already exists. Please choose different one.')
+
+
+class AppSettingsForm(FlaskForm):
+    app_name = StringField('APP Name')
+    backup_enabled = SelectField('Enable Backup', choices=[('0', 'Disable'), ('1', 'Enable')])
+    backup_type = IntegerField('Backup Type', choices=[('1', 'Drive'), ('2', 'Google Drive')])
+    google_drive_id = StringField('Google Drive id')
+    backup_interval = IntegerField('Backup Interval', validators=[Length(min=1)])
+    email_push_enabled = SelectField('Enable Email Push', choices=[('0', 'Enable'), ('2', 'Disable')])
+    web_push_enabled = SelectField('Enable Web Push', choices=[('0', 'Enable'), ('2', 'Disable')])
+
+

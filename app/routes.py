@@ -1,7 +1,7 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, abort
 from . import app, db
-from . models import Users, deadlines
-from . forms import RegistrationForm, LoginForm, SettingsForm
+from . models import Users, deadlines, AppSettings
+from . forms import RegistrationForm, LoginForm, SettingsForm, AppSettingsForm
 from flask_login import login_required, login_user, current_user, logout_user
 import hashlib
 
@@ -28,7 +28,7 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -61,7 +61,22 @@ def settings():
     return render_template('settings.html', form=form, title='Settings')
 
 
+@app.route('/admin')
+@login_required
+def admin():
+    if current_user.is_authenticated and current_user.admin:
+        form = AppSettingsForm()
+        render_template('admin.html', form=form)
+    abort(404)
+
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('404.html'), 404
