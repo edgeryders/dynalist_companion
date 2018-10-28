@@ -1,13 +1,10 @@
-# config files
-config.py
-
 # generated files for persistence and logging
 resources/
 
 # Python runtime files
-venv
+venv/
 __pycache__
 *.pyc
 
-# Python IDE files
+# Intellij IDE files
 .idea/
