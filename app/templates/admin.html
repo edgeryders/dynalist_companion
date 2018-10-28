@@ -12,17 +12,16 @@
         <a class="nav-link" href="/">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Settings</a>
+        <a class="nav-link" href="{{ url_for('settings') }}">Settings</a>
       </li>
       <li class="nav-item active">
-        <a class="nav-link" href="#">Admin Panel</a>
+        <a class="nav-link" href="#">Admin panel</a>
       </li>
   </ul>
       <a href="{{ url_for('logout') }}">Logout</a>
   </div>
 </nav>
 {% endblock navs %}
-
 {% block content %}
 <div class="container">
 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -35,50 +34,79 @@
          {% endif %}
          {% endwith %}
 <form method="post" action="">
-<div class="form-group">
     {{ form.hidden_tag() }}
 
-    {{ form.username.label }}
-    {% if form.username.errors %}
-                 {{ form.username(class="form-control is-invalid") }}
-                 <div class="invalid-feedback">
-                 {% for error in form.username.errors %}
-                     <span>{{ error }}</span>
-                     </div>
+    <div class="form-group">
+    {{ form.dynalist_api_url.label }}
+    {{ form.dynalist_api_url(class="form-control") }}
+    </div>
 
-                 {% endfor %}
-             {% else %}
-                 {{ form.username(class="form-control") }}
-             {% endif %}
+    <div class="form-group">
+        {{ form.dynalist_api_token.label }}
+        {{ form.dynalist_api_token(class="form-control") }}
+    </div>
 
-    {{ form.email.label }}
-    {% if form.email.errors %}
-                 {{ form.email(class="form-control is-invalid") }}
-                 <div class="invalid-feedback">
-                 {% for error in form.email.errors %}
-                     <span>{{ error }}</span>
-                     </div>
+    <div class="form-group">
+        {{ form.dynalist_api_file_id.label }}
+        {{ form.dynalist_api_file_id(class="form-control") }}
+    </div>
 
-                 {% endfor %}
-             {% else %}
-                 {{ form.email(class="form-control") }}
-             {% endif %}
+    <div class="form-group">
+        {{ form.smtp_host.label }}
+        {{ form.smtp_host(class="form-control") }}
+    </div>
 
-    {{ form.alert_deadline.label }}
-    {{ form.alert_deadline(class="form-control") }}
+    <div class="form-group">
+        {{ form.smtp_port.label }}
+        {{ form.smtp_port(class="form-control") }}
+    </div>
 
-    <div class="form-check">
-    {{ form.push_email(class="form-check-input") }}
-    {{ form.push_email.label(class="form-check-label") }}
+    <div class="form-group">
+        {{ form.smtp_email.label }}
+        {{ form.smtp_email(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+        {{ form.secret_code.label }}
+        {{ form.secret_code(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+    {{ form.smtp_password.label }}
+    {{ form.smtp_password(class="form-control") }}
     </div>
 
     <div class="form-check">
-    {{ form.push_web(class="form-check-input") }}
-    {{ form.push_web.label(class="form-check-label") }}
+        {{ form.backup_enabled(class="form-check-input") }}
+        {{ form.backup_enabled.label(class="form-check-label") }}
+    </div>
+
+    <div class="form-group">
+        {{ form.google_drive_id.label }}
+        {{ form.google_drive_id(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+        {{ form.backup_type.label }}
+        {{ form.backup_type(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+        {{ form.backup_file_prefix.label }}
+        {{ form.backup_file_prefix(class="form-control") }}
+    </div>
+
+    <div class="form-check">
+        {{ form.email_push_enabled(class="form-check-input") }}
+        {{ form.email_push_enabled.label(class="form-check-label") }}
+    </div>
+
+    <div class="form-check">
+        {{ form.web_push_enabled(class="form-check-input") }}
+        {{ form.web_push_enabled.label(class="form-check-label") }}
     </div>
 
     {{ form.submit(class="btn btn-primary") }}
-</div>
 </form>
-</div>
 {% endblock content %}
+</div>
