@@ -7,8 +7,11 @@ app = Flask(__name__)
 app.config.from_object('config')
 
 db = SQLAlchemy(app)
+
 config = app.config
+
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
-from app import routes
+
+from . models import AppSettings
