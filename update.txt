@@ -1,0 +1,2 @@
+print('No update available')
+print('Good day. :-)')
