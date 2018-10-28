@@ -9,7 +9,7 @@
 **[3. Installation](#3-installation)**
 
 * [3.1. Basic installation](#31-basic-installation)
-* [3.2. Updating software]((#32-updating-and-upgrading-software)
+* [3.2. Updating software](#32-updating-and-upgrading-software)
 * [3.3. Drive setup for automated backup](#33-drive-setup-for-automated-backup)
 * [3.4. Additional steps for production environments (Apache)](#34-additional-steps-for-production-environments-apache)
 
