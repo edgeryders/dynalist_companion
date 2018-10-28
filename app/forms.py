@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, Integ
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 from wtforms.fields.html5 import EmailField
 from . models import Users
-from . import config
+from . import app_sett
 from flask_login import current_user
 
 
@@ -30,7 +30,7 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Email address already exists.')
 
     def validate_secret_code(self, secret_code):
-        code = config['SECRET_CODE']
+        code = app_sett.secret_code
         if not code == secret_code.data:
             raise ValidationError('Invalid secret code')
 
@@ -65,12 +65,20 @@ class SettingsForm(FlaskForm):
 
 
 class AppSettingsForm(FlaskForm):
-    app_name = StringField('APP Name')
-    backup_enabled = SelectField('Enable Backup', choices=[('0', 'Disable'), ('1', 'Enable')])
-    backup_type = IntegerField('Backup Type', choices=[('1', 'Drive'), ('2', 'Google Drive')])
+    backup_enabled = BooleanField('Enable Backup')
+    backup_type = SelectField('Backup Type', choices=[('0', 'Backup Type'), ('1', 'Drive'), ('2', 'Google Drive')])
     google_drive_id = StringField('Google Drive id')
-    backup_interval = IntegerField('Backup Interval', validators=[Length(min=1)])
-    email_push_enabled = SelectField('Enable Email Push', choices=[('0', 'Enable'), ('2', 'Disable')])
-    web_push_enabled = SelectField('Enable Web Push', choices=[('0', 'Enable'), ('2', 'Disable')])
-
+    backup_file_prefix = StringField('Backup file name prefix')
+    email_push_enabled = BooleanField('Enable Email Push')
+    web_push_enabled = BooleanField('Enable Web Push')
+    dynalist_api_token = StringField('Dynalist Api token')
+    dynalist_api_url = StringField('Dynalist Api url')
+    dynalist_api_file_id = StringField('Dynalist File id')
+    smtp_host = StringField('SMTP Host')
+    smtp_port = StringField('SMTP Port')
+    smtp_email = StringField('SMTP Email address')
+    smtp_password = StringField('SMTP Password')
+    secret_code = StringField('Secret Code', validators=[Length(min=8,
+                                                                message='Secret code must be greater than 8 in length.')])
+    submit = SubmitField('Save')
 
