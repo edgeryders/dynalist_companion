@@ -5,8 +5,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 {% endblock head %}
   {% block content %}
-  {% block bodywarp %}
-      <body class="text-center">{% endblock bodywarp %}
+  {% block bodywarp %}<body class="text-center">{% endblock bodywarp %}
     <form class="form-signin" method="POST">
       <a href="/"><img class="mb-4" src="https://edgeryders.eu/images/logo-small.png" alt="Logo"></a>
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>

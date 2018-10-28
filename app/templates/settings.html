@@ -14,7 +14,7 @@
       <li class="nav-item active">
         <a class="nav-link" href="#">Settings</a>
       </li>
-      {% if current_user.admin %}
+      {% if current_user.is_admin %}
            <li class="nav-item">
                <a class="nav-link" href="{{ url_for('admin') }}">Admin Panel</a>
            </li>
@@ -35,7 +35,7 @@
             </div>
             {% endfor %}
          {% endif %}
-         {% endwith %}
+{% endwith %}
 <form method="post" action="">
 <div class="form-group">
     {{ form.hidden_tag() }}

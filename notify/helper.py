@@ -1,9 +1,7 @@
 import os
 import re
-from json import dumps
-from datetime import date
 from app.models import Users
-from vars import config, old_file, new_file
+from app import config, app_sett
 from . cli_args import dry_run
 import logging
 
@@ -22,15 +20,9 @@ logger.addHandler(stream_handler)
 
 
 def save(data): # Content fetched from dynalist api will be saved in server
-    logger.info('Writing backup file.')
-    filename = f'Dynalist.EdgerydersTasks.{date.today()}.json'
-    with open(os.path.join(config['RESOURCES_PATH'], filename), 'w') as f:
-        f.write(dumps(data))
-        logger.info('Backup file written.')
-
-    if not os.path.isfile(old_file):
+    if not os.path.isfile(config['OLD_FILE']):
         logger.info('Writing old.txt')
-        old = open(old_file, 'w', encoding='utf-8')
+        old = open(config['OLD_FILE'], 'w', encoding='utf-8')
         for lines in data['nodes']:
             if not lines['checked']:
                 old.write(f"{lines['id']} || {lines['content'].strip()}\n")
@@ -41,14 +33,14 @@ def save(data): # Content fetched from dynalist api will be saved in server
     else:
         logger.info('Old file exists.')
         logger.info('Writing new.txt')
-        new = open(new_file, 'w', encoding='utf-8')
+        new = open(config['NEW_FILE'], 'w', encoding='utf-8')
         for lines in data['nodes']:
             if not lines['checked']:
                 new.write(f"{lines['id']} || {lines['content'].strip()}\n")
         new.close()
         logger.info('new.txt written.')
         logger.info('Parsing...')
-        parse(old_file, new_file)
+        parse(config['OLD_FILE'], config['NEW_FILE'])
 
 
 def get_email(username):  # get email address from database using tag we got from dynalist
@@ -92,7 +84,7 @@ def parse(old, new):  # Compare two files dynalist-a.txt (old) and dynalist-b.tx
                     if email:
                         logger.info(f'Sending mail to {assign}, address {email}')
                         split_content = line.split(' || ')
-                        url = f"https://dynalist.io/d/{config['DYNALIST_FILE_ID']}#z={split_content[0]}"
+                        url = f"https://dynalist.io/d/{app_sett.dynalist_api_file_id}#z={split_content[0]}"
                         if not dry_run:
                             sendmail('Dynalist Notifications: New Task', email,
                                       f'Hi {assign},\n\nYou have been assigned a new task:\n\n"{split_content[1]}"\n{url}\n\nGood luck :)')
@@ -105,13 +97,13 @@ def sendmail(subject, emailto, message): # Send email
     from email.mime.text import MIMEText
     import smtplib
     msg = MIMEMultipart()
-    fromaddr = config['SMTP_EMAIL']
+    fromaddr = app_sett.smtp_email
     msg['From'] = fromaddr
     msg['To'] = emailto
     msg['Subject'] = subject
-    password = config['SMTP_PASSWORD']
+    password = app_sett.smtp_password
     msg.attach(MIMEText(message, 'plain'))
-    server = smtplib.SMTP(config['SMTP_HOST'], config['SMTP_PORT'])
+    server = smtplib.SMTP(app_sett.smtp_host, int(app_sett.smtp_port))
     server.starttls()
     server.login(fromaddr, password)
     body = msg.as_string()
