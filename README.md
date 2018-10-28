@@ -9,9 +9,9 @@
 **[3. Installation](#3-installation)**
 
 * [3.1. Basic installation](#31-basic-installation)
-* [3.2. Updating software](Updating-upgrading-software)
-* [3.3. Drive setup for automated backup](#32-drive-setup-for-automated-backup)
-* [3.4. Additional steps for production environments (Apache)](#33-additional-steps-for-production-environments-apache)
+* [3.2. Updating software]((#32-updating-and-upgrading-software)
+* [3.3. Drive setup for automated backup](#33-drive-setup-for-automated-backup)
+* [3.4. Additional steps for production environments (Apache)](#34-additional-steps-for-production-environments-apache)
 
 **[4. Usage](#4-usage)**
 
@@ -105,7 +105,7 @@ The instructions assume a Debian / Ubuntu system – the software is cross-platf
 
 
 4. Install PIP 18.0.1 inside the virtual environment. 
-Otherwise installation wouldn't be succeed with pip 10.0.1 or lower (unknown reason).
+Otherwise installation won't be succeed with pip 10.0.1 or lower (unknown reason).
 
 5. Run the setup script:
 
