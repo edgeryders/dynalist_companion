@@ -9,9 +9,10 @@
 **[3. Installation](#3-installation)**
 
 * [3.1. Basic installation](#31-basic-installation)
-* [3.2. Updating software](#32-updating-and-upgrading-software)
-* [3.3. Drive setup for automated backup](#33-drive-setup-for-automated-backup)
-* [3.4. Additional steps for production environments (Apache)](#34-additional-steps-for-production-environments-apache)
+* [3.2. Database configuration](#32-database-configuration)
+* [3.3. Updating software](#33-updating-and-upgrading-software)
+* [3.4. Drive setup for automated backup](#34-drive-setup-for-automated-backup)
+* [3.5. Additional steps for production environments (Apache)](#35-additional-steps-for-production-environments-apache)
 
 **[4. Usage](#4-usage)**
 
@@ -44,12 +45,22 @@ Additionally the software needs the following, but it will all be installed in t
 * Python virtual environment
 * Python 3.6 or higher
 * PIP
-* other Python packages as managed by `setup.py`
+* Other Python packages as managed by `setup.py`, see [`requirements.txt`](https://github.com/edgeryders/dynalist_companion/blob/master/requirements.txt)
 
 
 ## 3. Installation
 
 ### 3.1. Basic installation
+
+Clone the project or download and extract archive from our github repository.
+
+**Clone using GIT**
+
+`git clone git@github.com:edgeryders/dynalist_companion.git`
+
+**Extract archive**
+
+`unzip ~/Download/dynalist_companion-master.zip`
 
 This installation will let you use and develop the software. If you want to install the software for productive use on a web server, also follow the additional steps in the section after this one.
 
@@ -60,7 +71,7 @@ The instructions assume a Debian / Ubuntu system – the software is cross-platf
        $ python --version
        $ python3 --version
        $ python3.6 --version
-       
+ 
     The first command that shows its version as 3.6 is the right one to use below (we'll use `python3.6` always and be on the safe side). Maybe you have to install it first. Ubuntu 16.04 LTS for example provides only Python 3.5, which will not work – fix it as follows ([source](https://askubuntu.com/a/865569)):
     
        $ sudo add-apt-repository ppa:deadsnakes/ppa
@@ -132,13 +143,35 @@ Otherwise installation won't be succeed with pip 10.0.1 or lower (unknown reason
 
 Congratulations!!!
 
-### 3.2. Updating and upgrading software
+### 3.2. Database Configuration
+
+We are using ORM based database management system called **SQLAlchemy**.
+SQLAlchemy support verity of database engine, such as sqlite, mysql, postgres, etc, by default we are using sqlite3.
+You can choose any database engine as your choice.
+To use configure your favorite choice of database, tweak setting in `config.py` and locate a line `SQLALCHEMY_DATABASE_URI`.
+
+**Postgres:**
+
+postgresql://username:password@host/database_name
+
+**MySQL:**
+
+mysql://username:password@host/database_name
+
+**Oracle:**
+
+oracle://username:password@host/database_name
+
+
+For detailed configuration head over here [Engine Configuration — SQLAlchemy 1.2 Documentation](https://docs.sqlalchemy.org/en/latest/core/engines.html)
+
+### 3.3. Updating and upgrading software
 
 For convention we made simple for updating and upgrading the software.
 
 Simple one line commands is enough to do, nothing more.
 
-Whenever update is available, we put list of python code in `[update.txt](https://raw.githubusercontent.com/edgeryders/dynalist_companion/master/update.txt)` which is hosted on github.
+Whenever update is available, we put list of python code in [`update.txt`](https://raw.githubusercontent.com/edgeryders/dynalist_companion/master/update.txt)` which is hosted on github.
 
 **To Update:**
 
@@ -146,7 +179,7 @@ Make sure your virtual environment is active.
 
 `$ python manage.py -update`
 
-### 3.3. Drive setup for automated backup
+### 3.4. Drive setup for automated backup
 Dynalist companion supports automated backup system for dynalist node, as per id specified in Admin panel.
 
 Setup:
@@ -168,7 +201,7 @@ Goto: https://developers.google.com/drive/api/v3/quickstart/python
 5. Move `token.json` to resources directory.
 6. Move all above files to files to remote host.
 
-### 3.4. Additional steps for production environments (Apache)
+### 3.5. Additional steps for production environments (Apache)
 
 The development usage above uses a small internal web server. That is not suitable with respect to load and security in production environments, though. For that, we will need additional steps. This section shows the additional steps when you use the Apache2 web server (under Ubuntu / Debian Linux here).
 
