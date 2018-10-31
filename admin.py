@@ -5,7 +5,7 @@ from app.models import Users
 
 
 def runserver(args):
-    app.run(host=args.host, port=args.port, debug=args.port)
+    app.run(host=args.host, port=args.port, debug=args.debug)
 
 
 def notify(args):
