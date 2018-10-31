@@ -2,7 +2,6 @@ import os
 import re
 from app.models import Users
 from app import config, app_sett
-from . cli_args import dry_run
 import logging
 
 logger = logging.getLogger(__name__)
@@ -19,28 +18,29 @@ logger.addHandler(file_handler)
 logger.addHandler(stream_handler)
 
 
-def save(data): # Content fetched from dynalist api will be saved in server
+def save(data):  # Content fetched from dynalist api will be saved in server
     if not os.path.isfile(config['OLD_FILE']):
         logger.info('Writing old.txt')
-        old = open(config['OLD_FILE'], 'w', encoding='utf-8')
-        for lines in data['nodes']:
-            if not lines['checked']:
-                old.write(f"{lines['id']} || {lines['content'].strip()}\n")
-        old.close()
+        with open(config['OLD_FILE'], 'w', encoding='utf-8') as f:
+            for lines in data['nodes']:
+                if not lines['checked']:
+                    f.write(f"{lines['id']} || {lines['content'].strip()}\n")
+                    if lines['note']:
+                        f.write(f"{lines['id']} || {lines['note'].strip()}\n")
         logger.info('"old.txt" written.')
         logger.info('Exiting...')
         exit()
     else:
         logger.info('Old file exists.')
         logger.info('Writing new.txt')
-        new = open(config['NEW_FILE'], 'w', encoding='utf-8')
-        for lines in data['nodes']:
-            if not lines['checked']:
-                new.write(f"{lines['id']} || {lines['content'].strip()}\n")
-        new.close()
+        with open(config['NEW_FILE'], 'w', encoding='utf-8') as f:
+            for lines in data['nodes']:
+                if not lines['checked']:
+                    f.write(f"{lines['id']} || {lines['content'].strip()}\n")
+                    if lines['note']:
+                        f.write(f"{lines['id']} || {lines['note'].strip()}\n")
         logger.info('new.txt written.')
-        logger.info('Parsing...')
-        parse(config['OLD_FILE'], config['NEW_FILE'])
+        return [config['OLD_FILE'], config['NEW_FILE']]
 
 
 def get_email(username):  # get email address from database using tag we got from dynalist
@@ -53,7 +53,8 @@ def get_email(username):  # get email address from database using tag we got fro
     return email
 
 
-def parse(old, new):  # Compare two files dynalist-a.txt (old) and dynalist-b.txt (new) that were previously saved before by save().
+def parse(old, new, dry_run):
+    # Compare two files dynalist-a.txt (old) and dynalist-b.txt (new) that were previously saved before by save().
     logger.info('reading old.txt.')
     old_file = open(old, 'r', encoding='utf-8').readlines()
     logger.info('reading new.txt.')
@@ -77,7 +78,7 @@ def parse(old, new):  # Compare two files dynalist-a.txt (old) and dynalist-b.tx
                         logger.info(f'Sending mail to {mention}, address {email}')
                         if not dry_run:
                             sendmail('Dynalist Notifications: New Mention', email,
-                                     f'Hi {mention},\n\nYou have been mentioned in a new task:\n\n"{split_content[1]}"\n{url}\n\nGood luck :)')
+                                     f'Hi {mention},\n\nYou have been mentioned in a new task:\n\n"{split_content[1].rstrip()}"\n{url}\n\nGood luck :)')
             if assigns:
                 for assign in assigns:
                     email = get_email(assign)
@@ -87,7 +88,7 @@ def parse(old, new):  # Compare two files dynalist-a.txt (old) and dynalist-b.tx
                         url = f"https://dynalist.io/d/{app_sett.dynalist_api_file_id}#z={split_content[0]}"
                         if not dry_run:
                             sendmail('Dynalist Notifications: New Task', email,
-                                      f'Hi {assign},\n\nYou have been assigned a new task:\n\n"{split_content[1]}"\n{url}\n\nGood luck :)')
+                                      f'Hi {assign},\n\nYou have been assigned a new task:\n\n"{split_content[1].rstrip()}"\n{url}\n\nGood luck :)')
     else:
         logger.info('No changes detected.')
 
