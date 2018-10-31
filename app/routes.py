@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash, abort
-from . import app, db, app_sett
-from . models import Users, deadlines
+from . import app, db
+from . models import Users, deadlines, AppSettings
 from . forms import RegistrationForm, LoginForm, SettingsForm, AppSettingsForm
 from flask_login import login_required, login_user, current_user, logout_user
 import hashlib
@@ -66,6 +66,7 @@ def settings():
 def admin():
     if current_user.is_authenticated and current_user.is_admin:
         form = AppSettingsForm()
+        app_sett = AppSettings.query.get(1)
         if form.validate_on_submit():
             app_sett.backup_enabled = form.backup_enabled.data
             app_sett.backup_type = form.backup_type.data
