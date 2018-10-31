@@ -18,6 +18,7 @@
 
 * [4.1. For developers](#41-for-developers)
 * [4.2. For users](#42-for-users)
+*[4.2. Command line tools](#43-command-line-tools)
 
 ----
 
@@ -152,15 +153,15 @@ To use configure your favorite choice of database, tweak setting in `config.py` 
 
 **Postgres:**
 
-postgresql://username:password@host/database_name
+`postgresql://username:password@host/database_name`
 
 **MySQL:**
 
-mysql://username:password@host/database_name
+`mysql://username:password@host/database_name`
 
 **Oracle:**
 
-oracle://username:password@host/database_name
+`oracle://username:password@host/database_name`
 
 
 For detailed configuration head over here [Engine Configuration — SQLAlchemy 1.2 Documentation](https://docs.sqlalchemy.org/en/latest/core/engines.html)
@@ -177,7 +178,7 @@ Whenever update is available, we put list of python code in [`update.txt`](https
 
 Make sure your virtual environment is active.
 
-`$ python manage.py -update`
+`$ python admin.py update`
 
 ### 3.4. Drive setup for automated backup
 Dynalist companion supports automated backup system for dynalist node, as per id specified in Admin panel.
@@ -185,7 +186,7 @@ Dynalist companion supports automated backup system for dynalist node, as per id
 Setup:
 1. Login to your admin account and goto admin panel.
 2. Check "enable backup" to enable. (disabled by default.)
-3. Select preferred backup system.  (default to local disk, for google drive integration follow steps below)
+3. Select preferred backup system.  (defaults to local disk, for google drive integration follow steps below)
 
 Setup cron job to execute backup.py and you are ready to go. Backup file will saved per hit inside `PROJECT_DIR'/resources/dynalist_backup` by default which can be changed from `config.py`.
 
@@ -196,7 +197,7 @@ Goto: https://developers.google.com/drive/api/v3/quickstart/python
 1. Create project or choose existing one and enable drive api for your app.
 2. Click **DOWNLOAD CLIENT CONFIGURATION** which will download `credentials.json` and move it to project's resources directory.
 3. Enable Backup system to google drive in Admin panel (default to local disk).
-3. Execute `backup.py`, new instance of browser tab will open. (`$ python backup/backup.py`)
+3. Execute `backup.py`, new instance of browser tab will open. (`$ python admin.py backup`)
 4. Give drive access to your app and `token.json` file will saved to your project's backup package's directory.
 5. Move `token.json` to resources directory.
 6. Move all above files to files to remote host.
@@ -213,7 +214,7 @@ The development usage above uses a small internal web server. That is not suitab
 
 2. Install the wsgi module for Apache to serve your Python files.
 
-    Explanation: We can not simply install the Python 3 version from the Ubunu repository (`sudo apt install libapache2-mod-wsgi-py3`) as that might be compiled against a different version of Python 3. For example if it was compiled against Python 3.5 while we use Pythin 3.6, it would look only for Pythin 3.5 libraries and not find our Python 3.6 libraries which we will provide in the virtual environment under `/path/to/project/venv/lib/python3.6/`. So instead we installed it via pip, which made sure it is the version of the Python in our virtual environment. See [here](https://stackoverflow.com/a/44915354) for details.
+    Explanation: We can not simply install the Python 3 version from the Ubunu repository (`sudo apt install libapache2-mod-wsgi-py3`) as that might be compiled against a different version of Python 3. For example if it was compiled against Python 3.5 while we use Python 3.6, it would look only for Pythin 3.5 libraries and not find our Python 3.6 libraries which we will provide in the virtual environment under `/path/to/project/venv/lib/python3.6/`. So instead we installed it via pip, which made sure it is the version of the Python in our virtual environment. See [here](https://stackoverflow.com/a/44915354) for details.
 
    1. Install the package that provides `apxs`, which will be used by the `mod_wsgi` Python package to compile the Apache module:
 
@@ -310,7 +311,7 @@ When you finished the basic installation, you can already use the software for t
 
 **Starting the web application:** Start the web application for testing and development purposes as follows, using its integrated web server:
 
-       python manage.py -runserver --debug [`--debug` optional argument for debugging mode.]
+       python admin.py runserver --debug [`--debug` optional argument for debugging mode.]
        
 This has to be done inside the Python virtual environment (see above). This way, `python` will automatically refer to the right Python version. You can now access the web application by visiting this URL in your browser: `http://127.0.0.1:8080` (if you configured it to use a different port in `config.py`, use that of course).
 
@@ -324,9 +325,49 @@ When you also finished the installation steps for the production environment, th
 
 **Test-run for sending notifications:** You can *test* before which notifications would be sent, without sending any, by appending the `--dry-run` parameter to `notify.py`. So for example, following the first variant of the command from above:
 
-       source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/notify.py --dry-run
+       source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/admin.py notify --dry-run
        
 
 ### 4.2. For users
 
 Our documentation for end users, including how to register and use the application, is available in [our Dynalist Manual](https://edgeryders.eu/t/7618) in section "4. Get notifications about new tasks". It is written specifically for our own installation, but you can easily adapt it to your case.
+
+
+### 4.3. Command line tools
+
+We have powerful integrated command line tool called `admin.py`.
+
+You can call command line tool by executing `$ python admin.py --help`.
+
+To remove `python` from each typing, provide execute permission to `admin.py`.
+
+`$ python chmod +x admin.py`
+
+Now you can execute:
+
+`$ ./admin.py --help`
+
+*`admin.py` use python virtual environment binary located on root directory of its location.*
+
+
+Examples:
+
+Change username, email for alex, generate random password and mark as admin. (more details: `$ ./admin.py usermod --help`)
+`$ ./admin.py usermod --username alex --new-username john --email john@example.com --rand --admin 1`
+
+
+Run local web server in host `0.0.0.1` and port `8080` with debugging mode. (more details: `$ ./admin.py runserver --help`)
+
+`$ admin.py runserver --host 0.0.0.1 --port 8181 --debug`  [defaults: --host 127.0.0.1 --port 8080]
+
+Update dynalist_companion:
+ 
+`$ admin.py update`
+
+Run notify extension: (more details: `$ ./admin.py notify --help`)
+
+`$ admin.py notify`
+
+Run backup extension:
+
+`$ admin.py backup`
