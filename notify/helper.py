@@ -78,7 +78,9 @@ def parse(old, new, dry_run):
                         logger.info(f'Sending mail to {mention}, address {email}')
                         if not dry_run:
                             sendmail('Dynalist Notifications: New Mention', email,
-                                     f'Hi {mention},\n\nYou have been mentioned in a new task:\n\n"{split_content[1].rstrip()}"\n{url}\n\nGood luck :)')
+                                     f'Hi {mention},\n\nYou have been mentioned in a new task:\n\n'
+                                     f'"{split_content[1].rstrip()}"'
+                                     f'\n{url}\n\nGood luck :)')
             if assigns:
                 for assign in assigns:
                     email = get_email(assign)
@@ -88,12 +90,13 @@ def parse(old, new, dry_run):
                         url = f"https://dynalist.io/d/{app_sett.dynalist_api_file_id}#z={split_content[0]}"
                         if not dry_run:
                             sendmail('Dynalist Notifications: New Task', email,
-                                      f'Hi {assign},\n\nYou have been assigned a new task:\n\n"{split_content[1].rstrip()}"\n{url}\n\nGood luck :)')
+                                      f'Hi {assign},\n\nYou have been assigned a new task:\n\n'
+                                      f'"{split_content[1].rstrip()}"\n{url}\n\nGood luck :)')
     else:
         logger.info('No changes detected.')
 
 
-def sendmail(subject, emailto, message): # Send email
+def sendmail(subject, emailto, message):  # Send email
     from email.mime.multipart import MIMEMultipart
     from email.mime.text import MIMEText
     import smtplib
