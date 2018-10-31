@@ -312,8 +312,13 @@ When you finished the basic installation, you can already use the software for t
 **Starting the web application:** Start the web application for testing and development purposes as follows, using its integrated web server:
 
        python admin.py runserver
+
        
 This has to be done inside the Python virtual environment (see above). This way, `python` will automatically refer to the right Python version. You can now access the web application by visiting this URL in your browser: `http://127.0.0.1:8080` (if you configured it to use a different port in `config.py`, use that of course).
+
+**Starting in debug mode:** Start the web application with its internal server, but also append the optional parameter `--debug`:
+
+       python manage.py -runserver --debug
 
 **Sending notifications:** Run the notification script to get and process the Dynalist content and send notifications *once* with:
 
