@@ -18,7 +18,7 @@
 
 * [4.1. For developers](#41-for-developers)
 * [4.2. For users](#42-for-users)
-*[4.2. Command line tools](#43-command-line-tools)
+* [4.2. Command line tools](#43-command-line-tools)
 
 ----
 
