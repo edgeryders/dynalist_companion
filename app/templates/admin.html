@@ -37,8 +37,13 @@
     {{ form.hidden_tag() }}
 
     <div class="form-group">
-    {{ form.dynalist_api_url.label }}
-    {{ form.dynalist_api_url(class="form-control") }}
+        {{ form.secret_code.label }}
+        {{ form.secret_code(class="form-control") }}
+    </div>
+  
+    <div class="form-group">
+        {{ form.dynalist_api_url.label }}
+        {{ form.dynalist_api_url(class="form-control") }}
     </div>
 
     <div class="form-group">
@@ -67,13 +72,8 @@
     </div>
 
     <div class="form-group">
-        {{ form.secret_code.label }}
-        {{ form.secret_code(class="form-control") }}
-    </div>
-
-    <div class="form-group">
-    {{ form.smtp_password.label }}
-    {{ form.smtp_password(class="form-control") }}
+        {{ form.smtp_password.label }}
+        {{ form.smtp_password(class="form-control") }}
     </div>
 
     <div class="form-check">
@@ -82,13 +82,13 @@
     </div>
 
     <div class="form-group">
-        {{ form.google_drive_id.label }}
-        {{ form.google_drive_id(class="form-control") }}
+        {{ form.backup_type.label }}
+        {{ form.backup_type(class="form-control") }}
     </div>
 
     <div class="form-group">
-        {{ form.backup_type.label }}
-        {{ form.backup_type(class="form-control") }}
+        {{ form.google_drive_id.label }}
+        {{ form.google_drive_id(class="form-control") }}
     </div>
 
     <div class="form-group">
