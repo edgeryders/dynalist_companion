@@ -318,7 +318,7 @@ This has to be done inside the Python virtual environment (see above). This way,
 
 **Starting in debug mode:** Start the web application with its internal server, but also append the optional parameter `--debug`:
 
-       python manage.py -runserver --debug
+       python manage.py runserver --debug
 
 **Sending notifications:** Run the notification script to get and process the Dynalist content and send notifications *once* with:
 
