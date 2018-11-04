@@ -66,7 +66,7 @@ class SettingsForm(FlaskForm):
 
 class AppSettingsForm(FlaskForm):
     backup_enabled = BooleanField('Enable Backup')
-    backup_type = SelectField('Backup Type', choices=[('0', 'Backup Type'), ('1', 'Drive'), ('2', 'Google Drive')])
+    backup_type = SelectField('Backup Type', choices=[('0', 'Backup Type'), ('1', 'Local Folder'), ('2', 'Google Drive')])
     google_drive_id = StringField('Google Drive Folder ID')
     backup_file_prefix = StringField('Backup Filename Prefix')
     email_push_enabled = BooleanField('Enable Email Push')
