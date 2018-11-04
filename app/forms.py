@@ -45,8 +45,8 @@ class LoginForm(FlaskForm):
 
 class SettingsForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
-    push_web = BooleanField('Browser Push')
-    push_email = BooleanField('Email Push')
+    push_web = BooleanField('Browser Notifications')
+    push_email = BooleanField('Email Notifications')
     email = EmailField('Email', validators=[DataRequired()])
     alert_deadline = IntegerField('Deadline Alert')
     submit = SubmitField('Update')
@@ -69,8 +69,8 @@ class AppSettingsForm(FlaskForm):
     backup_type = SelectField('Backup Type', choices=[('0', 'Backup Type'), ('1', 'Local Folder'), ('2', 'Google Drive')])
     google_drive_id = StringField('Google Drive Folder ID')
     backup_file_prefix = StringField('Backup Filename Prefix')
-    email_push_enabled = BooleanField('Enable Email Push')
-    web_push_enabled = BooleanField('Enable Web Push')
+    email_push_enabled = BooleanField('Enable Email Notifications')
+    web_push_enabled = BooleanField('Enable Browser Notifications')
     dynalist_api_token = StringField('Dynalist API token')
     dynalist_api_url = StringField('Dynalist API URL')
     dynalist_api_file_id = StringField('Dynalist File ID')
