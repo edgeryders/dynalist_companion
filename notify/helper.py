@@ -1,14 +1,15 @@
-import os
+from os import path
 import re
-from app.models import Users
-from app import config, app_sett
 import logging
+from app.models import Users
+from app import config
+from app.models import AppSettings
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(levelname)s: %(name)s: %(message)s - %(asctime)s')
 
-file_handler = logging.FileHandler(os.path.join(config['RESOURCES_PATH'], 'notify.log'))
+file_handler = logging.FileHandler(path.join(config['RESOURCES_PATH'], 'notify.log'))
 file_handler.setFormatter(formatter)
 
 stream_handler = logging.StreamHandler()
@@ -17,30 +18,32 @@ stream_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 logger.addHandler(stream_handler)
 
+app_sett = AppSettings.query.get('core')
+
 
 def save(data):  # Content fetched from dynalist api will be saved in server
-    if not os.path.isfile(config['OLD_FILE']):
+    if not path.isfile(app_sett.old_file):
         logger.info('Writing old.txt')
-        with open(config['OLD_FILE'], 'w', encoding='utf-8') as f:
+        with open(app_sett.old_file, 'w', encoding='utf-8') as f:
             for lines in data['nodes']:
                 if not lines['checked']:
-                    f.write(f"{lines['id']} || {lines['content'].strip()}\n")
+                    f.write('{} || {}\n'.format(lines['id'], lines['content'].replace('\n', ' ').strip()))
                     if lines['note']:
-                        f.write(f"{lines['id']} || {lines['note'].strip()}\n")
+                        f.write('{} || {}\n'.format(lines['id'], lines['note'].replace('\n', ' ').strip()))
         logger.info('"old.txt" written.')
         logger.info('Exiting...')
         exit()
     else:
         logger.info('Old file exists.')
         logger.info('Writing new.txt')
-        with open(config['NEW_FILE'], 'w', encoding='utf-8') as f:
+        with open(app_sett.new_file, 'w', encoding='utf-8') as f:
             for lines in data['nodes']:
                 if not lines['checked']:
-                    f.write(f"{lines['id']} || {lines['content'].strip()}\n")
+                    f.write('{} || {}\n'.format(lines['id'], lines['content'].replace('\n', ' ').strip()))
                     if lines['note']:
-                        f.write(f"{lines['id']} || {lines['note'].strip()}\n")
+                        f.write('{} || {}\n'.format(lines['id'], lines['note'].replace('\n', ' ').strip()))
         logger.info('new.txt written.')
-        return [config['OLD_FILE'], config['NEW_FILE']]
+        return [app_sett.old_file, app_sett.new_file]
 
 
 def get_email(username):  # get email address from database using tag we got from dynalist

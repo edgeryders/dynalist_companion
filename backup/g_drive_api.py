@@ -4,7 +4,8 @@ from apiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
 from apiclient.http import MediaFileUpload
-from app import config, app_sett
+from app import config
+from app.models import AppSettings
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -19,16 +20,18 @@ stream_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 logger.addHandler(stream_handler)
 
+app_sett = AppSettings.query.get('core')
+
 
 def google_drive_upload(file_path):
     if not path.isfile(file_path):  # Check if uploading file exists
         logger.critical(f'{file_path} not found.')  # log file not found error and exit
         exit(1)
-    SCOPES = 'https://www.googleapis.com/auth/drive'
+    scopes = 'https://www.googleapis.com/auth/drive'
     store = file.Storage(path.join(config['RESOURCES_PATH'], 'token.json'))
     creds = store.get()
     if not creds or creds.invalid:
-        flow = client.flow_from_clientsecrets(path.join(config['RESOURCES_PATH'], 'credentials.json'), SCOPES)
+        flow = client.flow_from_clientsecrets(path.join(config['RESOURCES_PATH'], 'credentials.json'), scopes)
         creds = tools.run_flow(flow, store)
     drive_service = build('drive', 'v3', http=creds.authorize(Http()))
     if path.isfile(file_path): # Check if file exists
@@ -45,4 +48,4 @@ def google_drive_upload(file_path):
         file_create = drive_service.files().create(
                                             body=file_metadata,media_body=media,
                                             fields='id').execute()
-        logger.debug(f"File {file_create.get('id')} uploaded to {app_sett.google_drive_id}")
+        logger.info(f"File {file_create.get('id')} uploaded to {app_sett.google_drive_id}")
