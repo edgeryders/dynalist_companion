@@ -1,7 +1,6 @@
 from . import db, login_manager
-import re
+from re import findall
 from datetime import datetime
-from app import config
 from flask_login import UserMixin
 
 
@@ -24,8 +23,9 @@ class Users(db.Model, UserMixin):
 
 def deadlines(username):
     try:
-        read_file = open(config['OLD_FILE'], 'r', encoding='utf-8').read()
-        dates = re.findall('.*(20[0-9]{2}-\d{2}-\d{2}).*\.\s.*#%s' % username, read_file)
+        app_sett = AppSettings().query.get('core')
+        read_file = open(app_sett.old_file, 'r', encoding='utf-8').read()
+        dates = findall('.*(20[0-9]{2}-\d{2}-\d{2}).*\.\s.*#%s' % username, read_file)
         dates = [datetime.strptime(date, '%Y-%m-%d') for date in dates]
         now = datetime.now()
 
@@ -43,7 +43,7 @@ def deadlines(username):
 
 
 class AppSettings(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    sett = db.Column(db.String(), primary_key=True)
     backup_enabled = db.Column(db.SmallInteger)
     backup_type = db.Column(db.SmallInteger)  # 1 = drive, 2 = google drive
     google_drive_id = db.Column(db.String())
@@ -58,12 +58,16 @@ class AppSettings(db.Model):
     smtp_email = db.Column(db.String())
     smtp_password = db.Column(db.String())
     secret_code = db.Column(db.String())
+    app_name = db.Column(db.String())
+    old_file = db.Column(db.String())
+    new_file = db.Column(db.String())
+    backup_dir = db.Column(db.String())
 
 
 def get_dynalist_data():
+    app_sett = AppSettings.query.get('core')
     from urllib import request
     from json import dumps, loads
-    from app import app_sett
 
     body = {
         'token': app_sett.dynalist_api_token,
@@ -81,6 +85,4 @@ def get_dynalist_data():
         load_data = loads(raw_data)
         if load_data['_code'] == 'Ok':
             return load_data
-        else:
-            return load_data['_msg']
-
+        return load_data['_msg']

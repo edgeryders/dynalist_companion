@@ -6,6 +6,8 @@ from flask_login import login_required, login_user, current_user, logout_user
 import hashlib
 
 
+
+
 @app.route('/')
 @login_required
 def index():
@@ -65,8 +67,8 @@ def settings():
 @login_required
 def admin():
     if current_user.is_authenticated and current_user.is_admin:
-        form = AppSettingsForm()
-        app_sett = AppSettings.query.get(1)
+        app_sett = AppSettings.query.get('core')
+        form = AppSettingsForm(backup_type=app_sett.backup_type)
         if form.validate_on_submit():
             app_sett.backup_enabled = form.backup_enabled.data
             app_sett.backup_type = form.backup_type.data
@@ -82,10 +84,13 @@ def admin():
             app_sett.smtp_email = form.smtp_email.data
             app_sett.smtp_password = form.smtp_password.data
             app_sett.secret_code = form.secret_code.data
+            app_sett.app_name = form.app_name.data
+            app_sett.old_file = form.old_file.data
+            app_sett.new_file = form.new_file.data
+            app_sett.backup_dir = form.backup_dir.data
             db.session.commit()
             flash('Settings applied.', 'success')
         form.backup_enabled.data = app_sett.backup_enabled
-        form.backup_type.data = app_sett.backup_type
         form.google_drive_id.data = app_sett.google_drive_id
         form.backup_file_prefix.data = app_sett.backup_file_prefix
         form.email_push_enabled.data = app_sett.email_push_enabled
@@ -98,6 +103,10 @@ def admin():
         form.smtp_email.data = app_sett.smtp_email
         form.smtp_password.data = app_sett.smtp_password
         form.secret_code.data = app_sett.secret_code
+        form.app_name.data = app_sett.app_name
+        form.old_file.data = app_sett.old_file
+        form.new_file.data = app_sett.new_file
+        form.backup_dir.data = app_sett.backup_dir
         return render_template('admin.html', title='Admin panel', form=form)
     abort(404)
 
@@ -106,6 +115,11 @@ def admin():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+
+@app.context_processor
+def app_name():
+    return dict(app_name=AppSettings.query.with_entities(AppSettings.app_name).one()[0])
 
 
 @app.errorhandler(404)
