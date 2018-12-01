@@ -1,10 +1,9 @@
 #!./venv/bin/python
 import argparse
-from app import app
-from app.models import Users
 
 
 def runserver(args):
+    from app import app
     app.run(host=args.host, port=args.port, debug=args.debug)
 
 
@@ -15,7 +14,7 @@ def notify(args):
 
 def update(args):
     from urllib.request import urlopen
-    remote_file = 'https://raw.githubusercontent.com/edgeryders/dynalist_companion/master/update.txt'
+    remote_file = 'https://raw.githubusercontent.com/edgeryders/dynalist_companion/master/update.py'
     try:
         get_remote_content = urlopen(remote_file).read()  # Get update code from github
         exec(get_remote_content)
@@ -29,6 +28,7 @@ def backup(args):
 
 
 def usermod(args):
+    from app.models import Users
     user = Users.query.filter_by(username=args.username).first()
     if user:
         from app import db
@@ -37,13 +37,13 @@ def usermod(args):
         email_exists = db.session.query(db.session.query(Users).filter_by(email=args.email).exists()).scalar()
         if username_exists:
             print('Username already taken.')
-            exit(0)
+            exit()
         elif email_exists:
             print('Email already exists.')
             exit()
         import hashlib
-        user.username = args.new_username if args.new_username else args.username
         import secrets
+        user.username = args.new_username if args.new_username else args.username
         passwd = secrets.token_hex(8) if args.rand else args.passwd
         hashed = hashlib.sha256(passwd.encode()).hexdigest()
         user.password = hashed if hashed else user.password
@@ -90,17 +90,19 @@ backup_parser = subparsers.add_parser('backup', help=False,
 backup_parser.set_defaults(function=backup)
 
 usermod_parser = subparsers.add_parser('usermod', description='Modify user.', help=False)
-usermod_parser.add_argument('-u', '--username', help='Username for modding.', required=True)
+usermod_parser.add_argument('-u', '--username', help='Username to modify.', required=True)
 usermod_parser.add_argument('-nu', '--new-username', help='New username to set.')
 usermod_parser.add_argument('-e', '--email', help='User email.')
 usermod_parser.add_argument('-p', '--passwd', help='User password.')
-usermod_parser.add_argument('-a', '--admin', type=int, default=0, help='Make admin.')
+usermod_parser.add_argument('-a', '--admin', metavar='1', type=int, default=0, help='Make admin. (default 0)')
 usermod_parser.add_argument('--rand', action='store_true', help='Generate random password. (overwrites --passwd)')
 usermod_parser.set_defaults(function=usermod)
 
 args = parser.parse_args()
 
 if args.version:
-    print('Version 1.0.0')
+    from config import VERSION
+    print(VERSION)
+    exit()
 
 args.function(args)
