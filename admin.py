@@ -14,7 +14,7 @@ def notify(args):
 
 def update(args):
     from urllib.request import urlopen
-    remote_file = 'https://raw.githubusercontent.com/edgeryders/dynalist_companion/master/update.py'
+    remote_file = 'https://raw.githubusercontent.com/edgeryders/dynalist_companion/master/update.txt'
     try:
         get_remote_content = urlopen(remote_file).read()  # Get update code from github
         exec(get_remote_content)
