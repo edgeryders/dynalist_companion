@@ -1,9 +1,18 @@
-#./!venv/bin/python
+#! venv/bin/python
+
+# cancel setup install if existing install found
+from config import SECRET_KEY
+if SECRET_KEY:
+    print('Installation seems already exists.')
+    print('Running twice will damage the previous configuration.')
+    print('Exiting...')
+    exit()
+
 from setuptools import setup, find_packages
 from shutil import rmtree
 import secrets
 import hashlib
-from os import makedirs, rename
+from os import makedirs, path
 
 setup(
     name='dynalist_companion',
@@ -23,25 +32,24 @@ setup(
     packages=find_packages(),
     package_data={
         'app': ['templates/*.html'],
-        'backup': ['backup.py'],
-        'notify': ['notify.py']
     },
     data_files=[
         ('configuration', ['config.py']),
         ('css', ['app/static/floating-label.css', 'app/static/main.css']),
          ],
-    py_modules=['manage'],
+    py_modules=['admin'],
     install_requires=['Flask', 'Flask-Login', 'Flask-SQLAlchemy', 'Flask-WTF',
                       'Flask-Login', 'google-api-python-client', 'oauth2client'],
     python_requires='~=3.6'
 )
 
+
+from config import RESOURCES_PATH
+makedirs(path.join(RESOURCES_PATH, 'dynalist_backup'), exist_ok=True)
+
 # Configure secret key and secret code
 with open('config.py', 'a') as f:
     f.write(f"SECRET_KEY = '{secrets.token_hex(16)}'\n")
-
-from config import DYNALIST_BACKUP_DIR
-makedirs(DYNALIST_BACKUP_DIR, exist_ok=True)
 
 from app import db
 db.create_all()
@@ -55,15 +63,24 @@ db.session.add(default_user)
 
 # Setup default settings
 from app.models import AppSettings
+from config import RESOURCES_PATH
 secret_code = secrets.token_hex(8)
-default_sett = AppSettings(backup_enabled=0,
-                           backup_type=1,
-                           backup_file_prefix='Dynalist.EdgerydersTasks',
-                           email_push_enabled=1, web_push_enabled=0,
-                           dynalist_api_url='https://dynalist.io/api/v1/doc/read',
-                           smtp_host='smtp.google.com',
-                           smtp_port=587,
-                           secret_code=secret_code)
+default_sett = AppSettings(
+    sett='core',
+    backup_enabled=0,
+    backup_type=1,
+    backup_file_prefix='Dynalist.EdgerydersTasks',
+    email_push_enabled=1,
+    web_push_enabled=0,
+    dynalist_api_url='https://dynalist.io/api/v1/doc/read',
+    smtp_host='smtp.google.com',
+    smtp_port=587,
+    secret_code=secret_code,
+    app_name='Dynalist Companion',
+    old_file=RESOURCES_PATH + 'old.txt',
+    new_file=RESOURCES_PATH + 'new.txt',
+    backup_dir=RESOURCES_PATH + 'dynalist_backup'
+)
 
 db.session.add(default_sett)
 db.session.commit()
@@ -74,18 +91,8 @@ with open('for_admin.txt', 'w') as f:
 for_admin = open('for_admin.txt', 'r').read()
 print(for_admin)
 
-# configure app
-with open('app/__init__.py', 'a') as f:
-    f.write('app_sett = AppSettings.query.get(1)\n\n'
-            'from . import routes\n')
 
 # clean un necessary files created 'setup.py install'
 rmtree('build')
 rmtree('dist')
 rmtree('dynalist_companion.egg-info')
-
-
-# destruct itself, running twice may damage the installation
-rename('setup.py', 'setup.py.bk')
-
-
