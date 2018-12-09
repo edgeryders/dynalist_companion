@@ -289,11 +289,11 @@ The development usage above uses a small internal web server. That is not suitab
 
        service apache2 reload
        
-9. Set up cron for automatic calls to `notify.py`.
+9. Set up cron for automatic calls to send notifications.
 
-    For e-mail notifications to work, the `notify.py` script has to be called by `cron`, for example every 20 minutes. On each run, it will detect new changes to the Dynalist file and send notifications out as required. An example crontab line would be this:
+    For e-mail notifications to work, the `admin.py notify` command has to be called by `cron`, for example every 20 minutes. On each run, it will detect new changes to the Dynalist file and send notifications out as required. An example crontab line would be this:
     
-       */20 * * * * /usr/bin/env bash -c 'sleep $(($RANDOM \% 120))s && source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/notify.py'
+       */20 * * * * /usr/bin/env bash -c 'sleep $(($RANDOM \% 120))s && source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/admin.py notify'
        
     Explanations: **(1)** The `*/20` specifies that the command will run every 20 minutes. **(2)** `cron` uses the `sh` shell by default, which does not have the `source` builtin we need for virtualenv activation. We fix this by starting `bash` instead, as [shown here](https://stackoverflow.com/a/50556692). **(3)** Then we wait for a random number of 0-120 seconds to prevent load spikes on the Dynalist servers at minutes 0, 20 and 40 if more people start using this software. The technique was adapted [from here](https://stackoverflow.com/a/16289693). **(4)** Note the use of `\%` in the `sleep $(($RANDOM \% 120))s` command because an unescaped `%` terminates the line (!!) in crontab syntax.
     
@@ -326,13 +326,13 @@ This has to be done inside the Python virtual environment (see above). This way,
 
 **Sending notifications:** Run the notification script to get and process the Dynalist content and send notifications *once* with:
 
-       source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/notify.py
+       source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/admin.py notify
        
 When you also finished the installation steps for the production environment, the application will be publicly accessible on the Internet and send notifications regularly using `cron`. You can still also process and send notifications manually by executing the following command. The difference to the version above is that you execute it as user `username` that your webserver uses to execute the Dynalist Companion software, to not mess up the file access rights of files created by the command.
 
-       sudo -H -u username bash -c "source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/notify.py"
+       sudo -H -u username bash -c "source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/admin.py notify"
 
-**Test-run for sending notifications:** You can *test* before which notifications would be sent, without sending any, by appending the `--dry-run` parameter to `notify.py`. So for example, following the first variant of the command from above:
+**Test-run for sending notifications:** You can *test* before which notifications would be sent, without sending any, by appending the `--dry-run` parameter to `admin.py notify`. So for example, following the first variant of the command from above:
 
        source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/admin.py notify --dry-run
        
