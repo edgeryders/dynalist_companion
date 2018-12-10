@@ -16,9 +16,12 @@
 
 **[4. Usage](#4-usage)**
 
-* [4.1. For developers](#41-for-developers)
-* [4.2. For users](#42-for-users)
-* [4.3. Command line tools](#43-command-line-tools)
+**[5. Admin and developer documentation](#5-admin-and-developer-documentation)**
+
+* [5.1. Starting in development mode](#51-starting-in-development-mode)
+* [5.2. Starting in debug mode](#52-starting-in-debug-mode)
+* [5.3. Sending notifications](#53-sending-notifications)
+* [5.4. Command line tool usage](#54-command-line-tool-usage)
 
 ----
 
@@ -336,7 +339,6 @@ Start the web application like for development mode, using its internal server, 
        python manage.py runserver --debug
 
 
-
 ### 5.3. Sending notifications
 
 **Test-run for sending notifications:** You can *test* before which notifications would be sent, without sending any, by appending the `--dry-run` parameter to `admin.py notify`. So for example, following the first variant of the command from above:
@@ -352,7 +354,7 @@ Start the web application like for development mode, using its internal server, 
        sudo -H -u username bash -c "source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/admin.py notify"
        
 
-### 5.3. Command line tool usage
+### 5.4. Command line tool usage
 
 Dynalist Companion comes with a powerful integrated command line tool called `admin.py`. You can use this command line tool by executing:
 
