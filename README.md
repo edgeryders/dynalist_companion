@@ -225,7 +225,7 @@ The development usage above uses a small internal web server. That is not suitab
           # If you installed Python 3.6 from your distribution's default repository:
           $ sudo apt install python3-dev
 
-          # If yoy installed Python 3.6 from a PPA repository, as instructed above for Ubuntu 16.04:
+          # If you installed Python 3.6 from a PPA repository, as instructed above for Ubuntu 16.04:
           $ sudo apt install python3.6-dev
 
    3. Install `mod_wsgi` via PIP (which will include automatic compilation):
@@ -250,9 +250,9 @@ The development usage above uses a small internal web server. That is not suitab
 
 4. Create a file `dynalist_companion.wsgi` in your project directory with the following content:
 
-       from dynalist_companion.run import app as application
+       from dynalist_companion.app import app as application
        
-    Notes: We could not simply import the whole module ("file") `run.py` since it does not contain a factory function for automatic creation of the application. Instead, it imports other stuff and that creates a singleton application in `app/__init__.py` in line `app = Flask(__name__)`. We need to import that object `app`, and it is only a part of the `run` module ("file")! For reference, see here [here](http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/#creating-a-wsgi-file) and [here](https://stackoverflow.com/a/21948893).
+    Notes: We could not simply import the whole module `app` (file `app.py`) since it does not contain a factory function for automatic creation of the application. Instead, it imports other stuff and that creates a singleton application in `app/__init__.py` in line `app = Flask(__name__)`. We need to import that object `app`, and it is only a part of the `app` module / `app.py` file! For reference, see here [here](http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/#creating-a-wsgi-file) and [here](https://stackoverflow.com/a/21948893).
        
 5. Add the following to your global Apache2 server configuration. For example on Ubuntu Linux, place it into `/etc/apache2/conf-available/wsgi-local.conf` and enable it with `a2enconf wsgi-local`.
 
@@ -261,7 +261,7 @@ The development usage above uses a small internal web server. That is not suitab
          WSGIDaemonProcess dynalist_companion user=user1 group=group1 threads=5 python-home=/path/to/project/venv python-path=/path/to/project:/path/to/project/dynalist_companion
        </IfModule>
        
-    Here, you have to adapt the `user`, `group`, `python-home` and `python-path` parameters:
+    Here, you have to adapt the `user`, `group`, `python-home` and `python-path` parameters as follows:
     
     Set `python-home` to the path shown to you for `WSGIPythonHome` by the command `mod_wsgi-express module-config`, a few steps above. In our case, this is the only thing required (and the recommended solution) to set up Apache2 correctly to use our Python virtual environment ([overview and details](https://modwsgi.readthedocs.io/en/develop/user-guides/virtual-environments.html)).
     
@@ -289,6 +289,8 @@ The development usage above uses a small internal web server. That is not suitab
 
        service apache2 reload
        
+    This is necessary because we installed `mod_wsgi` but also for `mod_wsgi` to find all newly installed Python packages, including those of the Dynalist Companion application itself. Otherwise you can get error messages like `ModuleNotFoundError: No module named 'flask_login'`.
+       
 9. Set up cron for automatic calls to send notifications.
 
     For e-mail notifications to work, the `admin.py notify` command has to be called by `cron`, for example every 20 minutes. On each run, it will detect new changes to the Dynalist file and send notifications out as required. An example crontab line would be this:
@@ -305,78 +307,81 @@ Your installation should now be functional.
 
 ## 4. Usage
 
-### 4.1. For developers
+Our documentation for end users, including how to register and use the application, is available in [our Dynalist Manual](https://edgeryders.eu/t/7618) in section "4. Get notifications about new tasks". It is written specifically for our own installation, but you can easily adapt it to your case.
+
+
+## 5. Admin and developer documentation
+
+### 5.1. Starting in development mode
 
 When you finished the basic installation, you can already use the software for testing and development as follows:
 
-**Entering the virtual environment:** After each SSH login, you need to enter ("activate") the software's Python virtual environment. This way, all following Python related commands will use the Python, PIP and libraries of that environment. You can do this with an absolute path as follows:
+1. **Enter the virtual environment.** After each SSH login, you need to enter ("activate") the software's Python virtual environment. This way, all following Python related commands will use the Python, PIP and libraries of that environment. You can do this with an absolute path as follows:
 
        source /path/to/your/project/venv/bin/activate
 
-**Starting the web application:** Start the web application for testing and development purposes as follows, using its integrated web server:
+2. **Start the web application.** Start the web application for testing and development purposes as follows, using its integrated web server:
 
        python admin.py runserver
 
-       
-This has to be done inside the Python virtual environment (see above). This way, `python` will automatically refer to the right Python version. You can now access the web application by visiting this URL in your browser: `http://127.0.0.1:8080` (if you configured it to use a different port in `config.py`, use that of course).
+    This has to be done inside the Python virtual environment (see above). This way, `python` will automatically refer to the right Python version.
+    
+3. **Access the application.** You can now access the web application by visiting this URL in your browser: `http://127.0.0.1:8080` (if you configured it to use a different port in `config.py`, use that of course).
 
-**Starting in debug mode:** Start the web application with its internal server, but also append the optional parameter `--debug`:
+
+### 5.2. Starting in debug mode
+
+Start the web application like for development mode, using its internal server, but also append the optional parameter `--debug`:
 
        python manage.py runserver --debug
 
-**Sending notifications:** Run the notification script to get and process the Dynalist content and send notifications *once* with:
 
-       source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/admin.py notify
-       
-When you also finished the installation steps for the production environment, the application will be publicly accessible on the Internet and send notifications regularly using `cron`. You can still also process and send notifications manually by executing the following command. The difference to the version above is that you execute it as user `username` that your webserver uses to execute the Dynalist Companion software, to not mess up the file access rights of files created by the command.
 
-       sudo -H -u username bash -c "source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/admin.py notify"
+### 5.3. Sending notifications
 
 **Test-run for sending notifications:** You can *test* before which notifications would be sent, without sending any, by appending the `--dry-run` parameter to `admin.py notify`. So for example, following the first variant of the command from above:
 
        source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/admin.py notify --dry-run
+
+**Sending notifications for real:** Run the notification script to get and process the Dynalist content and send notifications *once* with:
+
+       source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/admin.py notify
+       
+**Sending notifications via cron:** When you also finished the installation steps for the production environment, the application will be publicly accessible on the Internet and send notifications regularly using `cron`. You can still also process and send notifications manually by executing the following command. The difference to the version above is that you execute it as user `username` that your webserver uses to execute the Dynalist Companion software, to not mess up the file access rights of files created by the command.
+
+       sudo -H -u username bash -c "source /path/to/your/project/venv/bin/activate && python /path/to/your/project/dynalist_companion/admin.py notify"
        
 
-### 4.2. For users
+### 5.3. Command line tool usage
 
-Our documentation for end users, including how to register and use the application, is available in [our Dynalist Manual](https://edgeryders.eu/t/7618) in section "4. Get notifications about new tasks". It is written specifically for our own installation, but you can easily adapt it to your case.
+Dynalist Companion comes with a powerful integrated command line tool called `admin.py`. You can use this command line tool by executing:
 
+        $ python admin.py --help
 
-### 4.3. Command line tools
+After providing executable permissions to `admin.py` via `python chmod +x admin.py`, you can call the command line tool simply as:
 
-We have powerful integrated command line tool called `admin.py`.
+        $ ./admin.py --help
 
-You can call command line tool by executing `$ python admin.py --help`.
+The tool will still use the Python virtual environment's Python binary.
 
-To remove `python` from each typing, provide execute permission to `admin.py`.
+Documentation of the command line options (by example):
 
-`$ python chmod +x admin.py`
+* Change username, email for alex, generate random password and mark as admin (more details under `./admin.py usermod --help`):
 
-Now you can execute:
+        $ ./admin.py usermod --username alex --new-username john --email john@example.com --rand --admin 1
 
-`$ ./admin.py --help`
+* Run the local web server on IP address `127.0.0.1` and port `8080` (also the defaults), in debugging mode (more details under `./admin.py runserver --help`):
 
-*`admin.py` use python virtual environment binary located on root directory of its location.*
+        $ admin.py runserver --host 0.0.0.1 --port 8181 --debug
 
-
-Examples:
-
-Change username, email for alex, generate random password and mark as admin. (more details: `$ ./admin.py usermod --help`)
-`$ ./admin.py usermod --username alex --new-username john --email john@example.com --rand --admin 1`
-
-
-Run local web server in host `0.0.0.1` and port `8080` with debugging mode. (more details: `$ ./admin.py runserver --help`)
-
-`$ admin.py runserver --host 0.0.0.1 --port 8181 --debug`  [defaults: --host 127.0.0.1 --port 8080]
-
-Update dynalist_companion:
+* Update the Dynalist Companion software:
  
-`$ admin.py update`
+        $ admin.py update
 
-Run notify extension: (more details: `$ ./admin.py notify --help`)
+* Create and send notifications: (more details under `./admin.py notify --help`):
 
-`$ admin.py notify`
+        $ admin.py notify
 
-Run backup extension:
+* Create a backup:
 
-`$ admin.py backup`
+        $ admin.py backup
